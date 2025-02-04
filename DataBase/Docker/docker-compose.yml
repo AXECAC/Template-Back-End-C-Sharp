@@ -1,0 +1,34 @@
+services:
+  db:
+    container_name: postgresTemplate
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: aragami
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: templatedb
+    ports:
+      - "5432:5432"
+    networks:
+      custom_network:
+        ipv4_address: 10.100.0.2  # Static IP address for the db service
+
+  pgadmin:
+    container_name: pgadmin4Template
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: pgadmin
+    ports:
+      - "80:80"
+    networks:
+      custom_network:
+        ipv4_address: 10.100.0.3  # Static IP address for the db service
+
+networks:
+  custom_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.100.0.0/16  # Define subnet to include your chosen IP
