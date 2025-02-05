@@ -2,9 +2,9 @@ using Microsoft.EntityFrameworkCore;
 namespace Context;
 
 // Class Context
-public class Context : DbContext
+public class TepmlateDbContext : DbContext
 {
-    public Context(DbContextOptions<Context> options) : base(options)
+    public TepmlateDbContext(DbContextOptions<TepmlateDbContext> options) : base(options)
     {
 
     }
