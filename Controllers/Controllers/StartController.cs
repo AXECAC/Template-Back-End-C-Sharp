@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace TemplateBackEndCSharp.StartController
+namespace Controllers.StartController
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
