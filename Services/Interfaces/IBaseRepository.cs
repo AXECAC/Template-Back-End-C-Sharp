@@ -7,10 +7,10 @@ public interface IBaseRepository<T>
     Task<bool> Create(T model);
 
     // Get model from db by id
-    Task<T> Get(int id);
+    Task<T>? Get(int id);
 
     // Get models from db
-    Task<List<T>> Select();
+    Task<List<T>>? Select();
 
     // Delete models from db
     Task<bool> Delete(T model);
