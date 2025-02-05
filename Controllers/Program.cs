@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Context;
-using Npgsql;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
