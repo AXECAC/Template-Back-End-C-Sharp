@@ -15,7 +15,7 @@ builder.Services.AddSwaggerGen();
 var connectionString = builder.Configuration.GetConnectionString("Postgres");
 
 // Connect to db
-builder.Services.AddDbContext<TepmlateDbContext>(options => 
+builder.Services.AddDbContext<TemplateDbContext>(options => 
         options.UseNpgsql(connectionString));
 
 var app = builder.Build();
