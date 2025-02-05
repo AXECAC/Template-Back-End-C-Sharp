@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using Context;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,6 +9,14 @@ builder.Services.AddControllersWithViews();
 //Add Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+
+// Read connection string to pgsql db
+var connectionString = builder.Configuration.GetConnectionString("Postgres");
+
+// Connect to db
+builder.Services.AddDbContext<TepmlateDbContext>(options => 
+        options.UseNpgsql(connectionString));
 
 var app = builder.Build();
 
