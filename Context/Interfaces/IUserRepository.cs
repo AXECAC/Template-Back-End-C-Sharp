@@ -1,6 +1,6 @@
 using DataBase;
 
-namespace Services;
+namespace Context;
 
 // Interface IUserRepository
 public interface IUserRepository : IBaseRepository<User>

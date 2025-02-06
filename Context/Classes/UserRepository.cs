@@ -1,8 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using Context;
 using DataBase;
 
-namespace Services;
+namespace Context;
 
 // Class UserRepository
 public class UserRepository : IUserRepository
