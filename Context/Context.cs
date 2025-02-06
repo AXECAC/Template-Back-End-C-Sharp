@@ -1,11 +1,14 @@
 using Microsoft.EntityFrameworkCore;
+using DataBase;
 namespace Context;
 
 // Class Context
-public class TepmlateDbContext : DbContext
+public class TemplateDbContext : DbContext
 {
-    public TepmlateDbContext(DbContextOptions<TepmlateDbContext> options) : base(options)
+    public TemplateDbContext(DbContextOptions<TemplateDbContext> options) : base(options)
     {
-
+        Database.EnsureCreated();
     }
+
+    public DbSet<User> Users { get; set; }
 }
