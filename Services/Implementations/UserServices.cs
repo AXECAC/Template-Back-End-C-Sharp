@@ -14,6 +14,32 @@ public class UserServices : IUserServices
 
     public async Task<IBaseResponse<IEnumerable<User>>> GetUsers()
     {
+        var baseResponse = new BaseResponse<IEnumerable<User>>();
+        try
+        {
+            var users = await UserRepository.Select();
+            // in future try !users.Any()
+            // Ok (204) but 0 elements
+            if (users.Count == 0)
+            {
+                baseResponse.Description = "Find 0 elements";
+                baseResponse.StatusCode = 204;
+                return baseResponse;
+            }
+            // Ok (200)
+            baseResponse.Data = users;
+            baseResponse.StatusCode = 200;
+            return baseResponse;
+        }
+        catch (Exception ex)
+        {
+            // Server error (500)
+            return new BaseResponse<IEnumerable<User>>()
+            {
+                Description = $"{GetUsers} : {ex.Message}",
+                StatusCode = 500,
+            };
+        }
     }
 
     public async Task<IBaseResponse<User>> GetUser(int id)
