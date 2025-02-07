@@ -6,5 +6,5 @@ namespace Context;
 public interface IUserRepository : IBaseRepository<User>
 {
     // Get user by email
-    Task<User>? GetEmail(string email);
+    Task<User>? GetByEmail(string email);
 }
