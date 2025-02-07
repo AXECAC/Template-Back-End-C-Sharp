@@ -5,11 +5,11 @@ namespace Services;
 // Class UserServices
 public class UserServices : IUserServices
 {
-    private readonly IUserRepository UserRepository;
+    private readonly IUserRepository _UserRepository;
 
     public UserServices(IUserRepository userRepository)
     {
-        UserRepository = userRepository;
+        _UserRepository = userRepository;
     }
 
     public async Task<IBaseResponse<IEnumerable<User>>> GetUsers()
@@ -17,7 +17,7 @@ public class UserServices : IUserServices
         var baseResponse = new BaseResponse<IEnumerable<User>>();
         try
         {
-            var users = await UserRepository.Select();
+            var users = await _UserRepository.Select();
             // in future try !users.Any()
             // Ok (204) but 0 elements
             if (users.Count == 0)
@@ -47,7 +47,7 @@ public class UserServices : IUserServices
         var baseResponse = new BaseResponse<User>();
         try
         {
-            var user = await UserRepository.Get(id);
+            var user = await _UserRepository.Get(id);
             // NotFound (404)
             if (user == null)
             {
@@ -76,7 +76,7 @@ public class UserServices : IUserServices
         var baseResponse = new BaseResponse<User>();
         try
         {
-            await UserRepository.Create(userModel);
+            await _UserRepository.Create(userModel);
         }
         catch (Exception ex)
         {
@@ -99,7 +99,7 @@ public class UserServices : IUserServices
         };
         try
         {
-            var user = await UserRepository.Get(id);
+            var user = await _UserRepository.Get(id);
             if (user == null)
             {
                 baseResponse.Description = "User not found";
@@ -109,7 +109,7 @@ public class UserServices : IUserServices
                 return baseResponse;
             }
 
-            await UserRepository.Delete(user);
+            await _UserRepository.Delete(user);
 
             return baseResponse;
         }
@@ -129,7 +129,7 @@ public class UserServices : IUserServices
         var baseResponse = new BaseResponse<User>();
         try
         {
-            var user = await UserRepository.GetByEmail(email);
+            var user = await _UserRepository.GetByEmail(email);
             if (user == null)
             {
                 baseResponse.Description = "User not found";
@@ -156,7 +156,7 @@ public class UserServices : IUserServices
         var baseResponse = new BaseResponse<User>();
         try
         {
-            var user = await UserRepository.Get(id);
+            var user = await _UserRepository.Get(id);
             if (user == null)
             {
                 baseResponse.StatusCode = 404;
@@ -169,7 +169,7 @@ public class UserServices : IUserServices
             user.FirstName = userModel.FirstName;
             user.SecondName = userModel.SecondName;
 
-            await UserRepository.Update(user);
+            await _UserRepository.Update(user);
 
             return baseResponse;
         }
