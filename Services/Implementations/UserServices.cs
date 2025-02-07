@@ -126,7 +126,30 @@ public class UserServices : IUserServices
 
     public async Task<IBaseResponse<User>> GetUserByEmail(string email)
     {
+        var baseResponse = new BaseResponse<User>();
+        try
+        {
+            var user = await UserRepository.GetByEmail(email);
+            if (user == null)
+            {
+                baseResponse.Description = "User not found";
+                baseResponse.StatusCode = 404;
+                return baseResponse;
+            }
 
+            baseResponse.Data = user;
+            return baseResponse;
+        }
+        catch (Exception ex)
+        {
+            // Server error (500)
+            return new BaseResponse<User>()
+            {
+                Description = $"{GetUserByEmail} : {ex.Message}",
+                StatusCode = 500,
+            };
+
+        }
     }
 
     public async Task<IBaseResponse<User>> Edit(int id, User userModel)
