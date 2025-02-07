@@ -148,13 +148,39 @@ public class UserServices : IUserServices
                 Description = $"{GetUserByEmail} : {ex.Message}",
                 StatusCode = 500,
             };
-
         }
     }
 
     public async Task<IBaseResponse<User>> Edit(int id, User userModel)
     {
+        var baseResponse = new BaseResponse<User>();
+        try
+        {
+            var user = await UserRepository.Get(id);
+            if (user == null)
+            {
+                baseResponse.StatusCode = 404;
+                baseResponse.Description = "User not found";
+                return baseResponse;
+            }
 
+            user.Email = userModel.Email;
+            user.Password = userModel.Password;
+            user.FirstName = userModel.FirstName;
+            user.SecondName = userModel.SecondName;
+
+            await UserRepository.Update(user);
+
+            return baseResponse;
+        }
+        catch (Exception ex)
+        {
+            // Server error (500)
+            return new BaseResponse<User>()
+            {
+                Description = $"{Edit} : {ex.Message}",
+                StatusCode = 500,
+            };
+        }
     }
-    
 }
