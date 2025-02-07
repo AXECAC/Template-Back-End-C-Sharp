@@ -92,7 +92,36 @@ public class UserServices : IUserServices
 
     public async Task<IBaseResponse<bool>> DeleteUser(int id)
     {
+        var baseResponse = new BaseResponse<bool>()
+        {
+            StatusCode = 204,
+            Data = true
+        };
+        try
+        {
+            var user = await UserRepository.Get(id);
+            if (user == null)
+            {
+                baseResponse.Description = "User not found";
+                baseResponse.StatusCode = 404;
+                baseResponse.Data = false;
 
+                return baseResponse;
+            }
+
+            await UserRepository.Delete(user);
+
+            return baseResponse;
+        }
+        catch (Exception ex)
+        {
+            // Server error (500)
+            return new BaseResponse<bool>()
+            {
+                Description = $"{DeleteUser} : {ex.Message}",
+                StatusCode = 500,
+            };
+        }
     }
 
     public async Task<IBaseResponse<User>> GetUserByEmail(string email)
