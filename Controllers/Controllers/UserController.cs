@@ -54,7 +54,7 @@ namespace Controllers.UserController
             // User not found
             if (response.StatusCode == 404)
             {
-                // Return response 200
+                // Return response 404
                 return Results.NotFound();
             }
             // Return StatusCode 500
@@ -76,7 +76,7 @@ namespace Controllers.UserController
             // User not found
             if (response.StatusCode == 404)
             {
-                // Return response 200
+                // Return response 404
                 return Results.NotFound();
             }
             // Return StatusCode 500
@@ -107,6 +107,28 @@ namespace Controllers.UserController
                 // Return response 200
                 return Results.Ok();
             }
+        }
+
+        // Save (Create/Edit) method
+        [HttpDelete]
+        public async Task<IResult> DeleteUser(int id)
+        {
+            var response = await _UserServices.DeleteUser(id);
+
+            // User Deleted
+            if (response.StatusCode == 204)
+            {
+                // Return response 200
+                return Results.Ok();
+            }
+            // User not found
+            if (response.StatusCode == 404)
+            {
+                // Return response 404
+                return Results.NotFound();
+            }
+            // Return StatusCode 500
+            return Results.StatusCode(statusCode: response.StatusCode);
         }
     }
 }
