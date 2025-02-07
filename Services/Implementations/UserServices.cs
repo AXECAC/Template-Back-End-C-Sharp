@@ -73,7 +73,21 @@ public class UserServices : IUserServices
 
     public async Task<IBaseResponse<User>> CreateUser(User userModel)
     {
-
+        var baseResponse = new BaseResponse<User>();
+        try
+        {
+            await UserRepository.Create(userModel);
+        }
+        catch (Exception ex)
+        {
+            // Server error (500)
+            return new BaseResponse<User>()
+            {
+                Description = $"{GetUser} : {ex.Message}",
+                StatusCode = 500,
+            };
+        }
+        return baseResponse;
     }
 
     public async Task<IBaseResponse<bool>> DeleteUser(int id)
