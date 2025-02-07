@@ -15,24 +15,47 @@ namespace Controllers.UserController
             _UserServices = userServices;
         }
         
-        // Some Get method
+        // GetUsers method
         [HttpGet]
         public async Task<IResult> GetUsers()
         {
             var response = await _UserServices.GetUsers();
-                   
-            // Some Users find
+
+            // Some Users found
             if (response.StatusCode == 200)
             {
+                // Return response 200
                 return Results.Ok(response.Data.ToList());
             }
-            // 0 Users find
+            // 0 Users found
             if (response.StatusCode == 204)
             {
                 // Return response 200
                 return Results.Ok();
             }
-                   
+            // Return StatusCode 500
+            return Results.StatusCode(statusCode: response.StatusCode);
+        }
+
+        // GetUsers method
+        [HttpGet]
+        public async Task<IResult> GetUser(int id)
+        {
+            var response = await _UserServices.GetUser(id);
+
+            // User found
+            if (response.StatusCode == 200)
+            {
+                // Return response 200
+                return Results.Ok(response.Data);
+            }
+            // User not found
+            if (response.StatusCode == 404)
+            {
+                // Return response 200
+                return Results.NotFound();
+            }
+            // Return StatusCode 500
             return Results.StatusCode(statusCode: response.StatusCode);
         }
         
