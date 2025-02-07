@@ -39,11 +39,33 @@ namespace Controllers.UserController
             return Results.StatusCode(statusCode: response.StatusCode);
         }
 
-        // GetUsers method
+        // GetUserById method
         [HttpGet]
-        public async Task<IResult> GetUser(int id)
+        public async Task<IResult> GetUserById(int id)
         {
             var response = await _UserServices.GetUser(id);
+
+            // User found
+            if (response.StatusCode == 200)
+            {
+                // Return response 200
+                return Results.Ok(response.Data);
+            }
+            // User not found
+            if (response.StatusCode == 404)
+            {
+                // Return response 200
+                return Results.NotFound();
+            }
+            // Return StatusCode 500
+            return Results.StatusCode(statusCode: response.StatusCode);
+        }
+
+        // GetUserByEmail method
+        [HttpGet]
+        public async Task<IResult> GetUserByEmail(string email)
+        {
+            var response = await _UserServices.GetUserByEmail(email);
 
             // User found
             if (response.StatusCode == 200)
