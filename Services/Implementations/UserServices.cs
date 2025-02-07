@@ -83,7 +83,7 @@ public class UserServices : IUserServices
             // Server error (500)
             return new BaseResponse<User>()
             {
-                Description = $"{GetUser} : {ex.Message}",
+                Description = $"{CreateUser} : {ex.Message}",
                 StatusCode = 500,
             };
         }
