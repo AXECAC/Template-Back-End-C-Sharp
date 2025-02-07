@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Services;
+using DataBase;
+using Extentions;
 
 namespace Controllers.UserController
 {
@@ -59,12 +61,30 @@ namespace Controllers.UserController
             return Results.StatusCode(statusCode: response.StatusCode);
         }
         
-        // Some Post method
+        // Save (Create/Edit) method
         [HttpPost]
-        public IActionResult SomePost(int some)
+        public async Task<IResult> Save(User userModel)
         {
-            // Return response 200
-            return new OkResult();
+            // User not Valid (Bad input)
+            if (!userModel.IsValid())
+            {
+                // Return StatusCode 422
+                return Results.StatusCode(statusCode: 422);
+            }
+            // User valid and new (need create)
+            if (userModel.Id == 0)
+            {
+                await _UserServices.CreateUser(userModel);
+                // Return response 200
+                return Results.Ok();
+            }
+            // User valid and old (need edit)
+            else
+            {
+                await _UserServices.Edit(userModel.Id, userModel);
+                // Return response 200
+                return Results.Ok();
+            }
         }
     }
 }
