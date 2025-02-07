@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Services;
 
 namespace Controllers.UserController
 {
@@ -7,6 +8,12 @@ namespace Controllers.UserController
     // UserController class controller
     public class UserController
     {
+        private readonly IUserServices _UserServices; 
+
+        public UserController(IUserServices userServices)
+        {
+            _UserServices = userServices;
+        }
         // Some Get method
         [HttpGet]
         public IActionResult SomeGet()
