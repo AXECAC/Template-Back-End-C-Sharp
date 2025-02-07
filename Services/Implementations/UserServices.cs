@@ -138,6 +138,7 @@ public class UserServices : IUserServices
             }
 
             baseResponse.Data = user;
+            baseResponse.StatusCode = 200;
             return baseResponse;
         }
         catch (Exception ex)
@@ -171,6 +172,7 @@ public class UserServices : IUserServices
 
             await _UserRepository.Update(user);
 
+            baseResponse.StatusCode = 200;
             return baseResponse;
         }
         catch (Exception ex)
