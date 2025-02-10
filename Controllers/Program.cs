@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Services;
 using Context;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +11,9 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Add my Services
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserServices, UserServices>();
 
 // Read connection string to pgsql db
 var connectionString = builder.Configuration.GetConnectionString("Postgres");
