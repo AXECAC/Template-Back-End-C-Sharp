@@ -91,21 +91,21 @@ namespace Controllers.UserController
             if (!userModel.IsValid())
             {
                 // Return StatusCode 422
-                return Results.NoContent();
+                return Results.UnprocessableEntity();
             }
             // User valid and new (need create)
             if (userModel.Id == 0)
             {
                 await _UserServices.CreateUser(userModel);
-                // Return response 200
-                return Results.Ok();
+                // Return response 204
+                return Results.NoContent();
             }
             // User valid and old (need edit)
             else
             {
                 await _UserServices.Edit(userModel.Id, userModel);
-                // Return response 200
-                return Results.Ok();
+                // Return response 204
+                return Results.NoContent();
             }
         }
 
@@ -118,8 +118,8 @@ namespace Controllers.UserController
             // User Deleted
             if (response.StatusCode == DataBase.StatusCodes.NoContent)
             {
-                // Return response 200
-                return Results.Ok();
+                // Return response 204
+                return Results.NoContent();
             }
             // User not found
             if (response.StatusCode == DataBase.StatusCodes.NotFound)
