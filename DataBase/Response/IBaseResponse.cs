@@ -3,6 +3,6 @@ namespace DataBase;
 // Interface IBaseResponse
 public interface IBaseResponse<T>
 {
-    int StatusCode { get; }
+    StatusCodes StatusCode { get; }
     T Data { get; }
 }
