@@ -97,8 +97,8 @@ namespace Controllers.UserController
             if (userModel.Id == 0)
             {
                 await _UserServices.CreateUser(userModel);
-                // Return response 204
-                return NoContent();
+                // Return response 201
+                return Created();
             }
             // User valid and old (need edit)
             else
