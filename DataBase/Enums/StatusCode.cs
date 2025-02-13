@@ -1,6 +1,7 @@
 namespace DataBase;
 
-enum StatusCode{
+public enum StatusCodes
+{
     Ok, // 200 --- Ok
     Created, // 201 --- Ok created
     NoContent, // 204 --- Ok empty response
