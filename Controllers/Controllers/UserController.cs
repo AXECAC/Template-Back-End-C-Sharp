@@ -24,19 +24,19 @@ namespace Controllers.UserController
             var response = await _UserServices.GetUsers();
 
             // Some Users found
-            if (response.StatusCode == 200)
+            if (response.StatusCode == DataBase.StatusCodes.Ok)
             {
                 // Return response 200
                 return Results.Ok(response.Data.ToList());
             }
             // 0 Users found
-            if (response.StatusCode == 204)
+            if (response.StatusCode == DataBase.StatusCodes.NoContent)
             {
                 // Return response 200
-                return Results.Ok();
+                return Results.NoContent();
             }
             // Return StatusCode 500
-            return Results.StatusCode(statusCode: response.StatusCode);
+            return Results.StatusCode(statusCode: 500);
         }
 
         // GetUserById method
@@ -46,19 +46,19 @@ namespace Controllers.UserController
             var response = await _UserServices.GetUser(id);
 
             // User found
-            if (response.StatusCode == 200)
+            if (response.StatusCode == DataBase.StatusCodes.Ok)
             {
                 // Return response 200
                 return Results.Ok(response.Data);
             }
             // User not found
-            if (response.StatusCode == 404)
+            if (response.StatusCode == DataBase.StatusCodes.NotFound)
             {
                 // Return response 404
                 return Results.NotFound();
             }
             // Return StatusCode 500
-            return Results.StatusCode(statusCode: response.StatusCode);
+            return Results.StatusCode(statusCode: 500);
         }
 
         // GetUserByEmail method
@@ -68,19 +68,19 @@ namespace Controllers.UserController
             var response = await _UserServices.GetUserByEmail(email);
 
             // User found
-            if (response.StatusCode == 200)
+            if (response.StatusCode == DataBase.StatusCodes.Ok)
             {
                 // Return response 200
                 return Results.Ok(response.Data);
             }
             // User not found
-            if (response.StatusCode == 404)
+            if (response.StatusCode == DataBase.StatusCodes.NotFound)
             {
                 // Return response 404
                 return Results.NotFound();
             }
             // Return StatusCode 500
-            return Results.StatusCode(statusCode: response.StatusCode);
+            return Results.StatusCode(statusCode: 500);
         }
         
         // Save (Create/Edit) method
@@ -91,7 +91,7 @@ namespace Controllers.UserController
             if (!userModel.IsValid())
             {
                 // Return StatusCode 422
-                return Results.StatusCode(statusCode: 422);
+                return Results.NoContent();
             }
             // User valid and new (need create)
             if (userModel.Id == 0)
@@ -116,19 +116,19 @@ namespace Controllers.UserController
             var response = await _UserServices.DeleteUser(id);
 
             // User Deleted
-            if (response.StatusCode == 204)
+            if (response.StatusCode == DataBase.StatusCodes.NoContent)
             {
                 // Return response 200
                 return Results.Ok();
             }
             // User not found
-            if (response.StatusCode == 404)
+            if (response.StatusCode == DataBase.StatusCodes.NotFound)
             {
                 // Return response 404
                 return Results.NotFound();
             }
             // Return StatusCode 500
-            return Results.StatusCode(statusCode: response.StatusCode);
+            return Results.StatusCode(statusCode: 500);
         }
     }
 }
