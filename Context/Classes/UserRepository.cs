@@ -1,8 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using Context;
 using DataBase;
 
-namespace Services;
+namespace Context;
 
 // Class UserRepository
 public class UserRepository : IUserRepository
@@ -13,8 +12,9 @@ public class UserRepository : IUserRepository
     {
         Db = db;
     }
+    
     // GeUser user by email
-    public async Task<User>? GetEmail(string email)
+    public async Task<User>? GetByEmail(string email)
     {
         return await Db.Users.FirstOrDefaultAsync(x => x.Email == email);
     }

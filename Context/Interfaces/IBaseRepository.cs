@@ -1,4 +1,4 @@
-namespace Services;
+namespace Context;
 
 // Interface IBaseRepository
 public interface IBaseRepository<T>
