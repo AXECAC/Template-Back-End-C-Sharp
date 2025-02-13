@@ -23,12 +23,12 @@ public class UserServices : IUserServices
             if (users.Count == 0)
             {
                 baseResponse.Description = "Find 0 elements";
-                baseResponse.StatusCode = 204;
+                baseResponse.StatusCode = StatusCodes.NoContent;
                 return baseResponse;
             }
             // Ok (200)
             baseResponse.Data = users;
-            baseResponse.StatusCode = 200;
+            baseResponse.StatusCode = StatusCodes.Ok;
             return baseResponse;
         }
         catch (Exception ex)
@@ -37,7 +37,7 @@ public class UserServices : IUserServices
             return new BaseResponse<IEnumerable<User>>()
             {
                 Description = $"{GetUsers} : {ex.Message}",
-                StatusCode = 500,
+                StatusCode = StatusCodes.InternalServerError,
             };
         }
     }
@@ -52,12 +52,12 @@ public class UserServices : IUserServices
             if (user == null)
             {
                 baseResponse.Description = "User not found";
-                baseResponse.StatusCode = 404;
+                baseResponse.StatusCode = StatusCodes.NotFound;
                 return baseResponse;
             }
             baseResponse.Description = "User found";
             baseResponse.Data = user;
-            baseResponse.StatusCode = 200;
+            baseResponse.StatusCode = StatusCodes.Ok;
             return baseResponse;
         }
         catch (Exception ex)
@@ -66,7 +66,7 @@ public class UserServices : IUserServices
             return new BaseResponse<User>()
             {
                 Description = $"{GetUser} : {ex.Message}",
-                StatusCode = 500,
+                StatusCode = StatusCodes.InternalServerError,
             };
         }
     }
@@ -84,7 +84,7 @@ public class UserServices : IUserServices
             return new BaseResponse<User>()
             {
                 Description = $"{CreateUser} : {ex.Message}",
-                StatusCode = 500,
+                StatusCode = StatusCodes.InternalServerError,
             };
         }
         return baseResponse;
@@ -94,7 +94,7 @@ public class UserServices : IUserServices
     {
         var baseResponse = new BaseResponse<bool>()
         {
-            StatusCode = 204,
+            StatusCode = StatusCodes.NoContent,
             Data = true
         };
         try
@@ -103,7 +103,7 @@ public class UserServices : IUserServices
             if (user == null)
             {
                 baseResponse.Description = "User not found";
-                baseResponse.StatusCode = 404;
+                baseResponse.StatusCode = StatusCodes.NotFound;
                 baseResponse.Data = false;
 
                 return baseResponse;
@@ -119,7 +119,7 @@ public class UserServices : IUserServices
             return new BaseResponse<bool>()
             {
                 Description = $"{DeleteUser} : {ex.Message}",
-                StatusCode = 500,
+                StatusCode = StatusCodes.InternalServerError,
             };
         }
     }
@@ -133,12 +133,12 @@ public class UserServices : IUserServices
             if (user == null)
             {
                 baseResponse.Description = "User not found";
-                baseResponse.StatusCode = 404;
+                baseResponse.StatusCode = StatusCodes.NotFound;
                 return baseResponse;
             }
 
             baseResponse.Data = user;
-            baseResponse.StatusCode = 200;
+            baseResponse.StatusCode = StatusCodes.Ok;
             return baseResponse;
         }
         catch (Exception ex)
@@ -147,7 +147,7 @@ public class UserServices : IUserServices
             return new BaseResponse<User>()
             {
                 Description = $"{GetUserByEmail} : {ex.Message}",
-                StatusCode = 500,
+                StatusCode = StatusCodes.InternalServerError,
             };
         }
     }
@@ -160,7 +160,7 @@ public class UserServices : IUserServices
             var user = await _UserRepository.Get(id);
             if (user == null)
             {
-                baseResponse.StatusCode = 404;
+                baseResponse.StatusCode = StatusCodes.NotFound;
                 baseResponse.Description = "User not found";
                 return baseResponse;
             }
@@ -172,7 +172,7 @@ public class UserServices : IUserServices
 
             await _UserRepository.Update(user);
 
-            baseResponse.StatusCode = 200;
+            baseResponse.StatusCode = StatusCodes.Ok;
             return baseResponse;
         }
         catch (Exception ex)
@@ -181,7 +181,7 @@ public class UserServices : IUserServices
             return new BaseResponse<User>()
             {
                 Description = $"{Edit} : {ex.Message}",
-                StatusCode = 500,
+                StatusCode = StatusCodes.InternalServerError,
             };
         }
     }
