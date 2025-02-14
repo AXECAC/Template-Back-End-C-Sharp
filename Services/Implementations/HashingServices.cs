@@ -11,4 +11,10 @@ public class HashingServices : IHashingServices
         var hash = md5.ComputeHash(System.Text.Encoding.UTF8.GetBytes(input));
         return Convert.ToBase64String(hash);
     }
+
+    public User Hashing(User user)
+    {
+        user.Password = HashFunc(user.Password);
+        return user;
+    }
 }
