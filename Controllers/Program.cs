@@ -14,6 +14,7 @@ builder.Services.AddSwaggerGen();
 // Add my Services
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserServices, UserServices>();
+builder.Services.AddScoped<IHashingServices, HashingServices>();
 
 // Read connection string to pgsql db
 var connectionString = builder.Configuration.GetConnectionString("Postgres");

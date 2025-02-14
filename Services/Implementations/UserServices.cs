@@ -6,10 +6,12 @@ namespace Services;
 public class UserServices : IUserServices
 {
     private readonly IUserRepository _UserRepository;
+    private readonly IHashingServices _HashingServices;
 
-    public UserServices(IUserRepository userRepository)
+    public UserServices(IUserRepository userRepository, IHashingServices hashingServices)
     {
         _UserRepository = userRepository;
+        _HashingServices = hashingServices;
     }
 
     public async Task<IBaseResponse<IEnumerable<User>>> GetUsers()
@@ -73,6 +75,9 @@ public class UserServices : IUserServices
 
     public async Task<IBaseResponse<User>> CreateUser(User userModel)
     {
+        // Hashing Password
+        userModel = _HashingServices.Hashing(userModel);
+
         var baseResponse = new BaseResponse<User>();
         try
         {
@@ -154,6 +159,9 @@ public class UserServices : IUserServices
 
     public async Task<IBaseResponse<User>> Edit(int id, User userModel)
     {
+        // Hashing Password
+        userModel = _HashingServices.Hashing(userModel);
+
         var baseResponse = new BaseResponse<User>();
         try
         {
