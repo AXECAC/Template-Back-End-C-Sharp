@@ -26,7 +26,7 @@ namespace Controllers.AuthController
         [HttpPost]
         [AllowAnonymous]
         // [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(User user)
+        public async Task<IActionResult> Registration(User user)
         {
             if (_secretKey != "")
             {
