@@ -75,5 +75,14 @@ namespace Controllers.AuthController
             return StatusCode(statusCode: 500);
 
         }
+
+        [HttpGet]
+        [Authorize]
+        // Check token (instead of login if have token old valid token)(max old 3 hour)
+        public IActionResult Check()
+        {
+            // Token valid or else will be returned Unauthorized
+            return Ok();
+        }
     }
 }
