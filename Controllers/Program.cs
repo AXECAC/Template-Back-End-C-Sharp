@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Services;
 using Context;
-
+using StackExchange.Redis;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -20,13 +20,21 @@ builder.Services.AddScoped<IHashingServices, HashingServices>();
 var connectionString = builder.Configuration.GetConnectionString("Postgres");
 
 // Connect to db
-builder.Services.AddDbContext<TemplateDbContext>(options => 
+builder.Services.AddDbContext<TemplateDbContext>(options =>
         options.UseNpgsql(connectionString));
+
+// Connect to redis
+builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
+{
+    var configuration = ConfigurationOptions.Parse("localhost:6379");
+    return ConnectionMultiplexer.Connect(configuration);
+});
 
 var app = builder.Build();
 
 //Add Swagger
-if (app.Environment.IsDevelopment()){
+if (app.Environment.IsDevelopment())
+{
     app.UseSwagger();
     app.UseSwaggerUI();
 }
