@@ -7,14 +7,17 @@ public class AuthServices : IAuthServices
 {
     private readonly IUserRepository _UserRepository;
     private readonly IHashingServices _HashingServices;
+    private readonly ITokenServices _TokenServices;
 
-    public AuthServices(IUserRepository userRepository, IHashingServices hashingServices)
+    public AuthServices(IUserRepository userRepository, IHashingServices hashingServices,
+            ITokenServices tokenServices)
     {
         _UserRepository = userRepository;
         _HashingServices = hashingServices;
+        _TokenServices = tokenServices;
     }
 
-    public async Task<IBaseResponse<string>> TryRegister(User user)
+    public async Task<IBaseResponse<string>> TryRegister(User user, string secretKey)
     {
         // Hashing Password
         user = _HashingServices.Hashing(user);
@@ -33,7 +36,7 @@ public class AuthServices : IAuthServices
                 // Created (201)
                 baseResponse.StatusCode = StatusCodes.Created;
                 // For JWT token in future
-                baseResponse.Data = "";
+                baseResponse.Data = _TokenServices.GenereteJWTToken(user, secretKey);
             }
             // This email already exists
             else
