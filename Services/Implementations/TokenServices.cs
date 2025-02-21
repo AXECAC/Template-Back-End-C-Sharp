@@ -6,7 +6,7 @@ using DataBase;
 namespace Services;
 
 // Class TokenServices
-public class TokenServices
+public class TokenServices : ITokenServices
 {
     public string GenereteJWTToken(User user, string secretKey)
     {
