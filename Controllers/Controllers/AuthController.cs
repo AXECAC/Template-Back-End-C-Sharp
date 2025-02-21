@@ -7,7 +7,6 @@ using DataBase;
 
 namespace Controllers.AuthController
 {
-    // [Authorize]
     [Route("api/[controller]/[action]")]
     [ApiController]
     // StartController class controller
@@ -28,22 +27,33 @@ namespace Controllers.AuthController
         // [ValidateAntiForgeryToken]
         public async Task<IActionResult> Registration(User user)
         {
+            // Secret key not empty
             if (_secretKey != "")
             {
+                // Try Registration
                 var response = await _AuthServices.TryRegister(user, _secretKey);
+                // Registration successed
                 if (response.StatusCode == DataBase.StatusCodes.Created)
                 {
-                    Console.WriteLine(response.Data);
-                    return Ok(new {response.Data});
+                    // Return token (200)
+                    return Ok(new { response.Data });
                 }
+                // This email already used
                 else
                 {
+                    // Return Conflict (409)
                     return Conflict();
                 }
             }
             // Return StatusCode 500
             return StatusCode(statusCode: 500);
-            
+
+        }
+        [HttpGet]
+        [Authorize]
+        public IActionResult Test(int input)
+        {
+            return Ok(new { input });
         }
     }
 }
