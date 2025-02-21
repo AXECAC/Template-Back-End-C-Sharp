@@ -59,12 +59,43 @@ public class AuthServices : IAuthServices
 
     }
 
-    public async Task<IBaseResponse<string>> TryLogin(LoginUser form)
+    public async Task<IBaseResponse<string>> TryLogin(LoginUser form, string secretKey)
     {
+        // Hashing Password
+        User user = _HashingServices.Hashing(form);
 
         var baseResponse = new BaseResponse<string>();
         try
         {
+            // Find user email
+            var userDb = await _UserRepository.GetByEmail(user.Email);
+
+            // User exists
+            if (userDb != null)
+            {
+                // Compare hash password
+                if (user.Password == userDb.Password)
+                {
+                    // Ok (200)
+                    baseResponse.StatusCode = StatusCodes.Ok;
+                    // JWT token generate
+                    baseResponse.Data = _TokenServices.GenereteJWTToken(user, secretKey);
+                }
+                else
+                {
+
+                    // Unauthorized (401)
+                    baseResponse.StatusCode = StatusCodes.Unauthorized;
+                    baseResponse.Description = "Bad password";
+                }
+            }
+            // User not exists
+            else
+            {
+                // Unauthorized (401)
+                baseResponse.StatusCode = StatusCodes.Unauthorized;
+                baseResponse.Description = "Email not found";
+            }
             return baseResponse;
         }
         catch (Exception ex)
@@ -76,5 +107,6 @@ public class AuthServices : IAuthServices
                 StatusCode = StatusCodes.InternalServerError,
             };
         }
+
     }
 }
