@@ -5,4 +5,5 @@ namespace Services;
 public interface IHashingServices
 {
     User Hashing(User userModel);
+    User Hashing(LoginUser userModel);
 }

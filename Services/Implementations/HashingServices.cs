@@ -17,4 +17,12 @@ public class HashingServices : IHashingServices
         user.Password = HashFunc(user.Password);
         return user;
     }
+
+    public User Hashing(LoginUser loginUser)
+    {
+        User user = new User();
+        user.Email = loginUser.Email;
+        user.Password = HashFunc(loginUser.Password);
+        return user;
+    }
 }
