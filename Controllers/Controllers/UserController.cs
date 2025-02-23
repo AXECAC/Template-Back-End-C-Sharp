@@ -85,16 +85,36 @@ namespace Controllers.UserController
         
         // Save (Create/Edit) method
         [HttpPost]
-        public async Task<IActionResult> Save(User userModel, string oldEmail)
+        [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status201Created)]
+        [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status204NoContent)]
+        [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status409Conflict)]
+        [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status422UnprocessableEntity)]
+        public async Task<IActionResult> Save(User userModel, string oldEmail, bool IsNew)
         {
             // User not Valid (Bad input)
-            if (!userModel.IsValid())
+            // OldEmail Valid and IsNew == true (Bad input). OldEmail can't be valid because is new User
+            // OldEmail not Valid and IsNew == false (Bad input). OldEmail must be valid because is old User
+            if (!userModel.IsValid() || !(oldEmail.IsValidEmail() ^ IsNew))
             {
                 // Return StatusCode 422
                 return UnprocessableEntity();
             }
+
+            // If Email == OldEmail => only this user use this email
+            if (userModel.Email != oldEmail)
+            {
+                // Check usage "new email"
+                var response = await _UserServices.GetUserByEmail(userModel.Email);
+
+                // Conflict: this email already used
+                if (response.StatusCode == DataBase.StatusCodes.Ok)
+                {
+                    return Conflict();
+                }
+            }
+
             // User valid and new (need create)
-            if (oldEmail == "")
+            if (IsNew)
             {
                 await _UserServices.CreateUser(userModel);
                 // Return response 201
@@ -109,7 +129,7 @@ namespace Controllers.UserController
             }
         }
 
-        // Save (Create/Edit) method
+        // Delete method
         [HttpDelete]
         public async Task<IActionResult> DeleteUser(int id)
         {
