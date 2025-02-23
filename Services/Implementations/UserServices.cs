@@ -157,7 +157,7 @@ public class UserServices : IUserServices
         }
     }
 
-    public async Task<IBaseResponse<User>> Edit(int id, User userModel)
+    public async Task<IBaseResponse<User>> Edit(string oldEmail, User userModel)
     {
         // Hashing Password
         userModel = _HashingServices.Hashing(userModel);
@@ -165,7 +165,7 @@ public class UserServices : IUserServices
         var baseResponse = new BaseResponse<User>();
         try
         {
-            var user = await _UserRepository.Get(id);
+            var user = await _UserRepository.GetByEmail(oldEmail);
             if (user == null)
             {
                 baseResponse.StatusCode = StatusCodes.NotFound;

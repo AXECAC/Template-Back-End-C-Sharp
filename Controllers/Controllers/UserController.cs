@@ -85,7 +85,7 @@ namespace Controllers.UserController
         
         // Save (Create/Edit) method
         [HttpPost]
-        public async Task<IActionResult> Save(User userModel)
+        public async Task<IActionResult> Save(User userModel, string oldEmail)
         {
             // User not Valid (Bad input)
             if (!userModel.IsValid())
@@ -94,7 +94,7 @@ namespace Controllers.UserController
                 return UnprocessableEntity();
             }
             // User valid and new (need create)
-            if (userModel.Id == 0)
+            if (oldEmail == "")
             {
                 await _UserServices.CreateUser(userModel);
                 // Return response 201
@@ -103,7 +103,7 @@ namespace Controllers.UserController
             // User valid and old (need edit)
             else
             {
-                await _UserServices.Edit(userModel.Id, userModel);
+                await _UserServices.Edit(oldEmail, userModel);
                 // Return response 204
                 return NoContent();
             }
