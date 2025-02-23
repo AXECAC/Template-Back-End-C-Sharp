@@ -7,6 +7,7 @@ namespace Controllers.UserController
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
+    [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError)]
     // UserController class controller
     public class UserController : Controller
     {
@@ -19,6 +20,8 @@ namespace Controllers.UserController
         
         // GetUsers method
         [HttpGet]
+        [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status200OK)]
+        [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status204NoContent)]
         public async Task<IActionResult> GetUsers()
         {
             var response = await _UserServices.GetUsers();
@@ -41,6 +44,8 @@ namespace Controllers.UserController
 
         // GetUserById method
         [HttpGet]
+        [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status200OK)]
+        [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetUserById(int id)
         {
             var response = await _UserServices.GetUser(id);
@@ -63,6 +68,8 @@ namespace Controllers.UserController
 
         // GetUserByEmail method
         [HttpGet]
+        [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status200OK)]
+        [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetUserByEmail(string email)
         {
             var response = await _UserServices.GetUserByEmail(email);
@@ -86,7 +93,6 @@ namespace Controllers.UserController
         // Save (Create/Edit) method
         [HttpPost]
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status201Created)]
-        [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status204NoContent)]
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status409Conflict)]
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status422UnprocessableEntity)]
         public async Task<IActionResult> Save(User userModel, string oldEmail, bool IsNew)
@@ -124,13 +130,15 @@ namespace Controllers.UserController
             else
             {
                 await _UserServices.Edit(oldEmail, userModel);
-                // Return response 204
-                return NoContent();
+                // Return response 201
+                return Created();
             }
         }
 
         // Delete method
         [HttpDelete]
+        [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status204NoContent)]
+        [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteUser(int id)
         {
             var response = await _UserServices.DeleteUser(id);
