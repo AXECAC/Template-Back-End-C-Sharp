@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services;
 using DataBase;
@@ -6,6 +7,7 @@ using Extentions;
 namespace Controllers.UserController
 {
     [Route("api/[controller]/[action]")]
+    [Authorize]
     [ApiController]
     [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError)]
     // UserController class controller

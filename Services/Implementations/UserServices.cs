@@ -82,6 +82,7 @@ public class UserServices : IUserServices
         try
         {
             await _UserRepository.Create(userModel);
+            return baseResponse;
         }
         catch (Exception ex)
         {
@@ -92,7 +93,6 @@ public class UserServices : IUserServices
                 StatusCode = StatusCodes.InternalServerError,
             };
         }
-        return baseResponse;
     }
 
     public async Task<IBaseResponse<bool>> DeleteUser(int id)
@@ -105,6 +105,7 @@ public class UserServices : IUserServices
         try
         {
             var user = await _UserRepository.Get(id);
+            // User not found (404)
             if (user == null)
             {
                 baseResponse.Description = "User not found";
@@ -114,6 +115,7 @@ public class UserServices : IUserServices
                 return baseResponse;
             }
 
+            // User found (200)
             await _UserRepository.Delete(user);
 
             return baseResponse;
@@ -135,6 +137,7 @@ public class UserServices : IUserServices
         try
         {
             var user = await _UserRepository.GetByEmail(email);
+            // User not found (404)
             if (user == null)
             {
                 baseResponse.Description = "User not found";
@@ -142,6 +145,7 @@ public class UserServices : IUserServices
                 return baseResponse;
             }
 
+            // User found (200)
             baseResponse.Data = user;
             baseResponse.StatusCode = StatusCodes.Ok;
             return baseResponse;
@@ -166,6 +170,8 @@ public class UserServices : IUserServices
         try
         {
             var user = await _UserRepository.GetByEmail(oldEmail);
+
+            // User not found (404)
             if (user == null)
             {
                 baseResponse.StatusCode = StatusCodes.NotFound;
@@ -173,6 +179,7 @@ public class UserServices : IUserServices
                 return baseResponse;
             }
 
+            // User found (200)
             user.Email = userModel.Email;
             user.Password = userModel.Password;
             user.FirstName = userModel.FirstName;
