@@ -9,7 +9,6 @@ namespace Controllers.AuthController
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status200OK)]
     // StartController class controller
     public class AuthController : Controller
     {
@@ -24,6 +23,7 @@ namespace Controllers.AuthController
 
         [HttpPost]
         [AllowAnonymous]
+        [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status201Created)]
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status409Conflict)]
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError)]
         // Registration method
@@ -37,8 +37,8 @@ namespace Controllers.AuthController
                 // Registration successed
                 if (response.StatusCode == DataBase.StatusCodes.Created)
                 {
-                    // Return token (200)
-                    return Ok(new { response.Data });
+                    // Return token (201)
+                    return CreatedAtAction(nameof(user), new {response.Data});
                 }
                 // This email already used
                 else
@@ -52,6 +52,7 @@ namespace Controllers.AuthController
 
         }
         [HttpPost]
+        [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status200OK)]
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError)]
         // Login method
@@ -82,6 +83,7 @@ namespace Controllers.AuthController
 
         [HttpGet]
         [Authorize]
+        [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status200OK)]
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status401Unauthorized)]
         // Check token (instead of login if have token old valid token)(max old 3 hour)
         public IActionResult Check()

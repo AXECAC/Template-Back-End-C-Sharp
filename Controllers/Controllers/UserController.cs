@@ -124,14 +124,15 @@ namespace Controllers.UserController
             {
                 await _UserServices.CreateUser(userModel);
                 // Return response 201
-                return Created();
+                return CreatedAtAction(nameof(userModel), new {message = "Successed"});
             }
             // User valid and old (need edit)
             else
             {
                 await _UserServices.Edit(oldEmail, userModel);
                 // Return response 201
-                return Created();
+                return CreatedAtAction(nameof(userModel), new {message = "Successed"});
+                // return Created();
             }
         }
 
