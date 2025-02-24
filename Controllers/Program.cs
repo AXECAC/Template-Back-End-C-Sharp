@@ -79,11 +79,12 @@ builder.Services.AddDbContext<TemplateDbContext>(options =>
 var app = builder.Build();
 
 //Add Swagger
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
+// If you don't need debug you must add UseSwagger... to this if
+// if (app.Environment.IsDevelopment())
+// {
+// }
 
 app.UseRouting();
 
