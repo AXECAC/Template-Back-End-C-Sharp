@@ -24,10 +24,10 @@ builder.Services.AddDbContext<TemplateDbContext>(options =>
         options.UseNpgsql(connectionString));
 
 // Connect to redis
-builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
+builder.Services.AddStackExchangeRedisCache(options =>
 {
-    var configuration = ConfigurationOptions.Parse("localhost:6379");
-    return ConnectionMultiplexer.Connect(configuration);
+    options.Configuration = "10.100.0.4:6379";
+    options.InstanceName = "local";
 });
 
 var app = builder.Build();
