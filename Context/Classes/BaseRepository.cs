@@ -3,7 +3,7 @@ using DataBase;
 
 namespace Context;
 
-// Class UserRepository
+// Class BaseRepository
 public class BaseRepository<T> : IBaseRepository<T> where T : class
 {
     private readonly TemplateDbContext Db;
@@ -12,7 +12,6 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
     {
         Db = db;
     }
-    
 
     // Create model in db
     public async Task<bool> Create(T model)
