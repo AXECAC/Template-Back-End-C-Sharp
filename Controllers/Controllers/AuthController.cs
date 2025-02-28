@@ -27,26 +27,26 @@ namespace Controllers.AuthController
         // Registration method
         public async Task<IActionResult> Registration(User user)
         {
-            // Secret key not empty
-            if (_secretKey != "")
+            // Secret key empty
+            if (_secretKey == "")
             {
-                // Try Registration
-                var response = await _AuthServices.TryRegister(user, _secretKey);
-                // Registration successed
-                if (response.StatusCode == DataBase.StatusCodes.Created)
-                {
-                    // Return token (201)
-                    return CreatedAtAction(nameof(user), new {response.Data});
-                }
-                // This email already used
-                else
-                {
-                    // Return Conflict (409)
-                    return Conflict();
-                }
+                // Return StatusCode 500
+                return StatusCode(statusCode: 500);
             }
-            // Return StatusCode 500
-            return StatusCode(statusCode: 500);
+            // Try Registration
+            var response = await _AuthServices.TryRegister(user, _secretKey);
+            // Registration successed
+            if (response.StatusCode == DataBase.StatusCodes.Created)
+            {
+                // Return token (201)
+                return CreatedAtAction(nameof(user), new { response.Data });
+            }
+            // This email already used
+            else
+            {
+                // Return Conflict (409)
+                return Conflict();
+            }
 
         }
         [HttpPost]
@@ -56,26 +56,26 @@ namespace Controllers.AuthController
         // Login method
         public async Task<IActionResult> Login(LoginUser form)
         {
-            // Secret key not empty
-            if (_secretKey != "")
+            // Secret key empty
+            if (_secretKey == "")
             {
-                // Try Login
-                var response = await _AuthServices.TryLogin(form, _secretKey);
-                // Login successed
-                if (response.StatusCode == DataBase.StatusCodes.Ok)
-                {
-                    // Return token (200)
-                    return Ok(new { response.Data });
-                }
-                // Email or Password wrong
-                else
-                {
-                    // Return Conflict (401)
-                    return Unauthorized();
-                }
+                // Return StatusCode 500
+                return StatusCode(statusCode: 500);
             }
-            // Return StatusCode 500
-            return StatusCode(statusCode: 500);
+            // Try Login
+            var response = await _AuthServices.TryLogin(form, _secretKey);
+            // Login successed
+            if (response.StatusCode == DataBase.StatusCodes.Ok)
+            {
+                // Return token (200)
+                return Ok(new { response.Data });
+            }
+            // Email or Password wrong
+            else
+            {
+                // Return Conflict (401)
+                return Unauthorized();
+            }
 
         }
 
