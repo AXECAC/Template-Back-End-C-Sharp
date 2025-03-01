@@ -6,9 +6,6 @@ public interface IBaseRepository<T>
     // Create model in db
     Task<bool> Create(T model);
 
-    // Get model from db by id
-    Task<T>? Get(int id);
-
     // Get models from db
     Task<List<T>>? Select();
 
