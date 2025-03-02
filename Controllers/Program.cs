@@ -40,6 +40,14 @@ builder.Services.AddSwaggerGen(setup =>
                         { jwtSecurityScheme, Array.Empty<string>() }
                     });
         });
+// Cors for web frontend
+builder.Services.AddCors(options => {
+    options.AddDefaultPolicy(
+        policy => {
+            policy.WithOrigins("http://localhost:5173")
+            .AllowAnyHeader();
+        });
+});
 
 // Add Authentication
 builder.Services.AddAuthentication(options =>
@@ -85,6 +93,9 @@ app.UseSwaggerUI();
 // if (app.Environment.IsDevelopment())
 // {
 // }
+
+// Cors
+app.UseCors();
 
 app.UseRouting();
 
