@@ -74,6 +74,12 @@ namespace Controllers.UserController
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetUserByEmail(string email)
         {
+            // Email not Valid (Bad input)
+            if (!email.IsValidEmail())
+            {
+                // Return StatusCode 422
+                return UnprocessableEntity();
+            }
             var response = await _UserServices.GetUserByEmail(email);
 
             // User found
