@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services;
 using DataBase;
+using Extentions;
 
 namespace Controllers.AuthController
 {
@@ -23,6 +24,7 @@ namespace Controllers.AuthController
         [AllowAnonymous]
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status201Created)]
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status409Conflict)]
+        [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status422UnprocessableEntity)]
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError)]
         // Registration method
         public async Task<IActionResult> Registration(User user)
@@ -32,6 +34,12 @@ namespace Controllers.AuthController
             {
                 // Return StatusCode 500
                 return StatusCode(statusCode: 500);
+            }
+            // User not Valid (Bad input)
+            if (!user.IsValid())
+            {
+                // Return StatusCode 422
+                return UnprocessableEntity();
             }
             // Try Registration
             var response = await _AuthServices.TryRegister(user, _secretKey);
@@ -52,6 +60,7 @@ namespace Controllers.AuthController
         [HttpPost]
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status200OK)]
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status422UnprocessableEntity)]
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError)]
         // Login method
         public async Task<IActionResult> Login(LoginUser form)
@@ -61,6 +70,12 @@ namespace Controllers.AuthController
             {
                 // Return StatusCode 500
                 return StatusCode(statusCode: 500);
+            }
+            // User not Valid (Bad input)
+            if (!form.IsValid())
+            {
+                // Return StatusCode 422
+                return UnprocessableEntity();
             }
             // Try Login
             var response = await _AuthServices.TryLogin(form, _secretKey);
