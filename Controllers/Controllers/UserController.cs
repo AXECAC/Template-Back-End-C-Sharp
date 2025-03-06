@@ -48,8 +48,14 @@ namespace Controllers.UserController
         [HttpGet]
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status200OK)]
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound)]
+        [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status422UnprocessableEntity)]
         public async Task<IActionResult> GetUserById(int id)
         {
+            // Id validation (Bad Input)
+            if (id < 1){
+                // Return StatusCode 422
+                return UnprocessableEntity();
+            }
             var response = await _UserServices.GetUser(id);
 
             // User found
@@ -72,6 +78,7 @@ namespace Controllers.UserController
         [HttpGet]
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status200OK)]
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound)]
+        [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status422UnprocessableEntity)]
         public async Task<IActionResult> GetUserByEmail(string email)
         {
             // Email not Valid (Bad input)
@@ -156,8 +163,14 @@ namespace Controllers.UserController
         [HttpDelete]
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status204NoContent)]
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound)]
+        [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status422UnprocessableEntity)]
         public async Task<IActionResult> DeleteUser(int id)
         {
+            // Id validation (Bad Input)
+            if (id < 1){
+                // Return StatusCode 422
+                return UnprocessableEntity();
+            }
             var response = await _UserServices.DeleteUser(id);
 
             // User Deleted
