@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services;
 using DataBase;
+using Extentions;
 
 namespace Controllers.AuthController
 {
@@ -33,6 +34,12 @@ namespace Controllers.AuthController
                 // Return StatusCode 500
                 return StatusCode(statusCode: 500);
             }
+            // User not Valid (Bad input)
+            if (!user.IsValid())
+            {
+                // Return StatusCode 422
+                return UnprocessableEntity();
+            }
             // Try Registration
             var response = await _AuthServices.TryRegister(user, _secretKey);
             // Registration successed
@@ -61,6 +68,12 @@ namespace Controllers.AuthController
             {
                 // Return StatusCode 500
                 return StatusCode(statusCode: 500);
+            }
+            // User not Valid (Bad input)
+            if (!form.IsValid())
+            {
+                // Return StatusCode 422
+                return UnprocessableEntity();
             }
             // Try Login
             var response = await _AuthServices.TryLogin(form, _secretKey);
