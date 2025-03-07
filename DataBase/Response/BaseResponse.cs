@@ -19,6 +19,17 @@ public class BaseResponse<T> : IBaseResponse<T>
 			Description = description,
 		};
 	}
+
+	// Empty Ok response generate (200)
+	public static BaseResponse<T> Ok(string description = "")
+	{
+		return new BaseResponse<T>()
+		{
+			StatusCode = StatusCodes.Ok,
+			Description = description,
+		};
+	}
+
 	// Created response generate (201)
 	public static BaseResponse<T> Created(T data, string description = "")
 	{
@@ -29,6 +40,7 @@ public class BaseResponse<T> : IBaseResponse<T>
 			Description = description,
 		};
 	}
+
 	// Empty Created response generate (201)
 	public static BaseResponse<T> Created(string description = "")
 	{
@@ -68,6 +80,7 @@ public class BaseResponse<T> : IBaseResponse<T>
 			Description = description,
 		};
 	}
+
 	// Conflict response generate (409)
 	public static BaseResponse<T> Conflict(string description = "")
 	{
