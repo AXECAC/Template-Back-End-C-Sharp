@@ -49,6 +49,16 @@ public class BaseResponse<T> : IBaseResponse<T>
 		};
 	}
 
+	// Unauthorized response generate (401)
+	public static BaseResponse<T> Unauthorized(string description = "")
+	{
+		return new BaseResponse<T>()
+		{
+			StatusCode = StatusCodes.Unauthorized,
+			Description = description,
+		};
+	}
+
 	// NotFound response generate (404)
 	public static BaseResponse<T> NotFound(string description = "")
 	{
