@@ -133,7 +133,7 @@ public class UserServices : IUserServices
         // Hashing Password
         userModel = _HashingServices.Hashing(userModel);
 
-        var baseResponse = new BaseResponse<User>();
+        BaseResponse<User> baseResponse;
         try
         {
             var user = await _UserRepository.GetByEmail(oldEmail);
@@ -141,30 +141,26 @@ public class UserServices : IUserServices
             // User not found (404)
             if (user == null)
             {
-                baseResponse.StatusCode = StatusCodes.NotFound;
-                baseResponse.Description = "User not found";
+				baseResponse = BaseResponse<User>.NotFound("User not found");
                 return baseResponse;
             }
 
-            // User found (200)
+            // User found
             user.Email = userModel.Email;
             user.Password = userModel.Password;
             user.FirstName = userModel.FirstName;
             user.SecondName = userModel.SecondName;
 
+			// User edit (201)
             await _UserRepository.Update(user);
 
-            baseResponse.StatusCode = StatusCodes.Ok;
+			baseResponse = BaseResponse<User>.Created();
             return baseResponse;
         }
         catch (Exception ex)
         {
             // Server error (500)
-            return new BaseResponse<User>()
-            {
-                Description = $"{Edit} : {ex.Message}",
-                StatusCode = StatusCodes.InternalServerError,
-            };
+			return BaseResponse<User>.InternalServerError($"{Edit} : {ex.Message}");
         }
     }
 }
