@@ -22,7 +22,7 @@ public class AuthServices : IAuthServices
         // Hashing Password
         user = _HashingServices.Hashing(user);
 
-        var baseResponse = new BaseResponse<string>();
+		BaseResponse<string> baseResponse;
         try
         {
             // Find new user email
@@ -34,16 +34,13 @@ public class AuthServices : IAuthServices
                 // Create new user
                 await _UserRepository.Create(user);
                 // Created (201)
-                baseResponse.StatusCode = StatusCodes.Created;
-                // For JWT token in future
-                baseResponse.Data = _TokenServices.GenereteJWTToken(user, secretKey);
+				baseResponse = BaseResponse<string>.Created(data: _TokenServices.GenereteJWTToken(user, secretKey));
             }
             // This email already exists
             else
             {
                 // Conflict (409)
-                baseResponse.StatusCode = StatusCodes.Conflict;
-                baseResponse.Description = "This email already exists";
+                baseResponse = BaseResponse<string>.Conflict("This email already exists");
             }
             return baseResponse;
         }
