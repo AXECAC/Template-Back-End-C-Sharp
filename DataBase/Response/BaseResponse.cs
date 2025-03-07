@@ -48,4 +48,14 @@ public class BaseResponse<T> : IBaseResponse<T>
 			Description = description,
 		};
 	}
+
+	// NotFound response generate (404)
+	public static BaseResponse<T> NotFound(string description = "")
+	{
+		return new BaseResponse<T>()
+		{
+			StatusCode = StatusCodes.NotFound,
+			Description = description,
+		};
+	}
 }
