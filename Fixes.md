@@ -7,7 +7,15 @@
   Написать BaseResponse.Ok() класс без поля data
 
 
+- Переписать поиск по Id и по Email на...
+  ```cs
+    public async Task<T>? FirstOrDefaultAsync(Expression<Func<T, bool>> expression)
+    {
+        return await Db.Set<T>().FirstOrDefaultAsync(expression);
 
+    }
+  ```
+  В BaseRepository
 
 - В BaseRepository стоит добавить метод IQuariable<T> Where(Expresion)
 - IQuariable Select(Expresion)
