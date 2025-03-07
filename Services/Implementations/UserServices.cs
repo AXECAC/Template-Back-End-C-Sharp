@@ -81,37 +81,26 @@ public class UserServices : IUserServices
 
     public async Task<IBaseResponse<bool>> DeleteUser(int id)
     {
-        var baseResponse = new BaseResponse<bool>()
-        {
-            StatusCode = StatusCodes.NoContent,
-            Data = true
-        };
+        BaseResponse<bool> baseResponse;
         try
         {
             var user = await _UserRepository.Get(id);
             // User not found (404)
             if (user == null)
             {
-                baseResponse.Description = "User not found";
-                baseResponse.StatusCode = StatusCodes.NotFound;
-                baseResponse.Data = false;
-
+				baseResponse = BaseResponse<bool>.NotFound("User not found");
                 return baseResponse;
             }
 
-            // User found (200)
+            // User found (204)
             await _UserRepository.Delete(user);
-
+			baseResponse = BaseResponse<bool>.NoContent();
             return baseResponse;
         }
         catch (Exception ex)
         {
             // Server error (500)
-            return new BaseResponse<bool>()
-            {
-                Description = $"{DeleteUser} : {ex.Message}",
-                StatusCode = StatusCodes.InternalServerError,
-            };
+			return BaseResponse<bool>.InternalServerError($"{DeleteUser} : {ex.Message}");
         }
     }
 
