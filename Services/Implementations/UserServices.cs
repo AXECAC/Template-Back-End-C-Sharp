@@ -40,30 +40,25 @@ public class UserServices : IUserServices
 
     public async Task<IBaseResponse<User>> GetUser(int id)
     {
-        var baseResponse = new BaseResponse<User>();
+        BaseResponse<User> baseResponse;
         try
         {
             var user = await _UserRepository.Get(id);
             // NotFound (404)
             if (user == null)
             {
-                baseResponse.Description = "User not found";
-                baseResponse.StatusCode = StatusCodes.NotFound;
+				baseResponse = BaseResponse<User>.NotFound("User not found");
                 return baseResponse;
             }
-            baseResponse.Description = "User found";
+			// Found - Ok (200)
+			baseResponse = BaseResponse<User>.Ok(user, "User found");
             baseResponse.Data = user;
-            baseResponse.StatusCode = StatusCodes.Ok;
             return baseResponse;
         }
         catch (Exception ex)
         {
             // Server error (500)
-            return new BaseResponse<User>()
-            {
-                Description = $"{GetUser} : {ex.Message}",
-                StatusCode = StatusCodes.InternalServerError,
-            };
+			return BaseResponse<User>.InternalServerError($"{GetUser} : {ex.Message}");
         }
     }
 
