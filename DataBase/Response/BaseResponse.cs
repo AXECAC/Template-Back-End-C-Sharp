@@ -19,4 +19,14 @@ public class BaseResponse<T> : IBaseResponse<T>
 			Description = description,
 		};
 	}
+
+	// NoContent response generate
+	public static BaseResponse<T> NoContent(string description = "")
+	{
+		return new BaseResponse<T>()
+		{
+			StatusCode = StatusCodes.NoContent,
+			Description = description,
+		};
+	}
 }
