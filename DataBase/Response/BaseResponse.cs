@@ -9,7 +9,7 @@ public class BaseResponse<T> : IBaseResponse<T>
 
 	public T Data { get; set; }
 
-	// Ok response generate
+	// Ok response generate (200)
 	public static BaseResponse<T> Ok(T data, string description = "")
 	{
 		return new BaseResponse<T>()
@@ -19,8 +19,18 @@ public class BaseResponse<T> : IBaseResponse<T>
 			Description = description,
 		};
 	}
+	// Created response generate (201)
+	public static BaseResponse<T> Created(T data, string description = "")
+	{
+		return new BaseResponse<T>()
+		{
+			Data = data,
+			StatusCode = StatusCodes.Created,
+			Description = description,
+		};
+	}
 
-	// NoContent response generate
+	// NoContent response generate (204)
 	public static BaseResponse<T> NoContent(string description = "")
 	{
 		return new BaseResponse<T>()

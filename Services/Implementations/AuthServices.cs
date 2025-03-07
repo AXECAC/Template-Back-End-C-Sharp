@@ -83,7 +83,6 @@ public class AuthServices : IAuthServices
                 }
                 else
                 {
-
                     // Unauthorized (401)
                     baseResponse.StatusCode = StatusCodes.Unauthorized;
                     baseResponse.Description = "Bad password";
