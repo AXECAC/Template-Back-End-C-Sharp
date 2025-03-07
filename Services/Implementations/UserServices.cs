@@ -66,21 +66,16 @@ public class UserServices : IUserServices
     {
         // Hashing Password
         userModel = _HashingServices.Hashing(userModel);
-
-        var baseResponse = new BaseResponse<User>();
         try
         {
             await _UserRepository.Create(userModel);
+			var baseResponse = BaseResponse<User>.Created("User created");
             return baseResponse;
         }
         catch (Exception ex)
         {
             // Server error (500)
-            return new BaseResponse<User>()
-            {
-                Description = $"{CreateUser} : {ex.Message}",
-                StatusCode = StatusCodes.InternalServerError,
-            };
+			return BaseResponse<User>.InternalServerError($"{CreateUser} : {ex.Message}");
         }
     }
 
