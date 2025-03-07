@@ -8,4 +8,12 @@ public class BaseResponse<T> : IBaseResponse<T>
     public StatusCodes StatusCode { get; set; }
 
     public T Data { get; set; }
+
+	// Ok response generate
+	public static BaseResponse<T> Ok(T data){
+		return new BaseResponse<T>(){
+			Data = data,
+			StatusCode = StatusCodes.Ok,
+		};
+	}
 }
