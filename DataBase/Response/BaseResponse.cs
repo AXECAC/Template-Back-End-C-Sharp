@@ -90,4 +90,14 @@ public class BaseResponse<T> : IBaseResponse<T>
 			Description = description,
 		};
 	}
+
+	// InternalServerError response generate (500)
+	public static BaseResponse<T> InternalServerError(string description = "")
+	{
+		return new BaseResponse<T>()
+		{
+			StatusCode = StatusCodes.InternalServerError,
+			Description = description,
+		};
+	}
 }
