@@ -89,7 +89,7 @@ public class AuthServices : IAuthServices
 		catch (Exception ex)
 		{
 			// Server error (500)
-			return BaseResponse<string>.InternalServerError($"{TryRegister} : {ex.Message}");
+			return BaseResponse<string>.InternalServerError($"{TryLogin} : {ex.Message}");
 		}
 
 	}
