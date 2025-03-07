@@ -16,7 +16,7 @@ public class UserServices : IUserServices
 
     public async Task<IBaseResponse<IEnumerable<User>>> GetUsers()
     {
-        var baseResponse = new BaseResponse<IEnumerable<User>>();
+        BaseResponse<IEnumerable<User>> baseResponse;
         try
         {
             var users = await _UserRepository.Select();
@@ -24,23 +24,17 @@ public class UserServices : IUserServices
             // Ok (204) but 0 elements
             if (users.Count == 0)
             {
-                baseResponse.Description = "Find 0 elements";
-                baseResponse.StatusCode = StatusCodes.NoContent;
+				baseResponse = BaseResponse<IEnumerable<User>>.NoContent("Find 0 elements");
                 return baseResponse;
             }
             // Ok (200)
-            baseResponse.Data = users;
-            baseResponse.StatusCode = StatusCodes.Ok;
+			baseResponse = BaseResponse<IEnumerable<User>>.Ok(users);
             return baseResponse;
         }
         catch (Exception ex)
         {
             // Server error (500)
-            return new BaseResponse<IEnumerable<User>>()
-            {
-                Description = $"{GetUsers} : {ex.Message}",
-                StatusCode = StatusCodes.InternalServerError,
-            };
+			return BaseResponse<IEnumerable<User>>.InternalServerError($"{GetUsers} : {ex.Message}");
         }
     }
 
