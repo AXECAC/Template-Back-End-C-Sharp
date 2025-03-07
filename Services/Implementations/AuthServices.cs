@@ -47,11 +47,7 @@ public class AuthServices : IAuthServices
         catch (Exception ex)
         {
             // Server error (500)
-            return new BaseResponse<string>()
-            {
-                Description = $"{TryRegister} : {ex.Message}",
-                StatusCode = StatusCodes.InternalServerError,
-            };
+			return BaseResponse<string>.InternalServerError($"{TryRegister} : {ex.Message}");
         }
 
     }
