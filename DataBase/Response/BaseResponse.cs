@@ -10,12 +10,13 @@ public class BaseResponse<T> : IBaseResponse<T>
 	public T Data { get; set; }
 
 	// Ok response generate
-	public static BaseResponse<T> Ok(T data)
+	public static BaseResponse<T> Ok(T data, string description = "")
 	{
 		return new BaseResponse<T>()
 		{
 			Data = data,
 			StatusCode = StatusCodes.Ok,
+			Description = description,
 		};
 	}
 }
