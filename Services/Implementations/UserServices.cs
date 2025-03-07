@@ -106,31 +106,25 @@ public class UserServices : IUserServices
 
     public async Task<IBaseResponse<User>> GetUserByEmail(string email)
     {
-        var baseResponse = new BaseResponse<User>();
+        BaseResponse<User> baseResponse;
         try
         {
             var user = await _UserRepository.GetByEmail(email);
             // User not found (404)
             if (user == null)
             {
-                baseResponse.Description = "User not found";
-                baseResponse.StatusCode = StatusCodes.NotFound;
+				baseResponse = BaseResponse<User>.NotFound("User not found");
                 return baseResponse;
             }
 
             // User found (200)
-            baseResponse.Data = user;
-            baseResponse.StatusCode = StatusCodes.Ok;
+			baseResponse = BaseResponse<User>.Ok(user);
             return baseResponse;
         }
         catch (Exception ex)
         {
             // Server error (500)
-            return new BaseResponse<User>()
-            {
-                Description = $"{GetUserByEmail} : {ex.Message}",
-                StatusCode = StatusCodes.InternalServerError,
-            };
+			return BaseResponse<User>.InternalServerError($"{GetUserByEmail} : {ex.Message}");
         }
     }
 
