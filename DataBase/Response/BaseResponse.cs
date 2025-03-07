@@ -58,4 +58,13 @@ public class BaseResponse<T> : IBaseResponse<T>
 			Description = description,
 		};
 	}
+	// Conflict response generate (409)
+	public static BaseResponse<T> Conflict(string description = "")
+	{
+		return new BaseResponse<T>()
+		{
+			StatusCode = StatusCodes.Conflict,
+			Description = description,
+		};
+	}
 }
