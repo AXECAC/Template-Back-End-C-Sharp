@@ -21,6 +21,7 @@
 - IQuariable Select(Expresion)
 
 ```cs
+using System.Collections.Generic;
 // Достать Id всех юзеров с именем Alex
 var .. = await UserRepository
   .Where(x => x.FirstName == "Alex")
