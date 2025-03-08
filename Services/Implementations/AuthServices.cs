@@ -22,7 +22,7 @@ public class AuthServices : IAuthServices
         // Hashing Password
         user = _HashingServices.Hashing(user);
 
-        var baseResponse = new BaseResponse<string>();
+        BaseResponse<string> baseResponse;
         try
         {
             // Find new user email
@@ -34,27 +34,20 @@ public class AuthServices : IAuthServices
                 // Create new user
                 await _UserRepository.Create(user);
                 // Created (201)
-                baseResponse.StatusCode = StatusCodes.Created;
-                // For JWT token in future
-                baseResponse.Data = _TokenServices.GenereteJWTToken(user, secretKey);
+                baseResponse = BaseResponse<string>.Created(data: _TokenServices.GenereteJWTToken(user, secretKey));
             }
             // This email already exists
             else
             {
                 // Conflict (409)
-                baseResponse.StatusCode = StatusCodes.Conflict;
-                baseResponse.Description = "This email already exists";
+                baseResponse = BaseResponse<string>.Conflict("This email already exists");
             }
             return baseResponse;
         }
         catch (Exception ex)
         {
             // Server error (500)
-            return new BaseResponse<string>()
-            {
-                Description = $"{TryRegister} : {ex.Message}",
-                StatusCode = StatusCodes.InternalServerError,
-            };
+            return BaseResponse<string>.InternalServerError($"{TryRegister} : {ex.Message}");
         }
 
     }
@@ -64,7 +57,7 @@ public class AuthServices : IAuthServices
         // Hashing Password
         User user = _HashingServices.Hashing(form);
 
-        var baseResponse = new BaseResponse<string>();
+        BaseResponse<string> baseResponse;
         try
         {
             // Find user email
@@ -77,35 +70,26 @@ public class AuthServices : IAuthServices
                 if (user.Password == userDb.Password)
                 {
                     // Ok (200)
-                    baseResponse.StatusCode = StatusCodes.Ok;
-                    // JWT token generate
-                    baseResponse.Data = _TokenServices.GenereteJWTToken(user, secretKey);
+                    baseResponse = BaseResponse<string>.Ok(data: _TokenServices.GenereteJWTToken(user, secretKey));
                 }
                 else
                 {
-
                     // Unauthorized (401)
-                    baseResponse.StatusCode = StatusCodes.Unauthorized;
-                    baseResponse.Description = "Bad password";
+                    baseResponse = BaseResponse<string>.Unauthorized("Bad password");
                 }
             }
             // User not exists
             else
             {
                 // Unauthorized (401)
-                baseResponse.StatusCode = StatusCodes.Unauthorized;
-                baseResponse.Description = "Email not found";
+                baseResponse = BaseResponse<string>.Unauthorized("Email not found");
             }
             return baseResponse;
         }
         catch (Exception ex)
         {
             // Server error (500)
-            return new BaseResponse<string>()
-            {
-                Description = $"{TryRegister} : {ex.Message}",
-                StatusCode = StatusCodes.InternalServerError,
-            };
+            return BaseResponse<string>.InternalServerError($"{TryLogin} : {ex.Message}");
         }
 
     }

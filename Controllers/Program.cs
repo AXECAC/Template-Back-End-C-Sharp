@@ -41,9 +41,11 @@ builder.Services.AddSwaggerGen(setup =>
                     });
         });
 // Cors for web frontend
-builder.Services.AddCors(options => {
+builder.Services.AddCors(options =>
+{
     options.AddDefaultPolicy(
-        policy => {
+        policy =>
+        {
             policy.WithOrigins("http://localhost:5173")
             .AllowAnyHeader();
         });
@@ -70,11 +72,11 @@ builder.Services.AddAuthentication(options =>
             });
 
 // Add my Services
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IUserServices, UserServices>();
-builder.Services.AddScoped<ITokenServices, TokenServices>();
-builder.Services.AddScoped<IHashingServices, HashingServices>();
-builder.Services.AddScoped<IAuthServices, AuthServices>();
+builder.Services.AddSingleton<IUserRepository, UserRepository>();
+builder.Services.AddSingleton<IUserServices, UserServices>();
+builder.Services.AddSingleton<ITokenServices, TokenServices>();
+builder.Services.AddSingleton<IHashingServices, HashingServices>();
+builder.Services.AddSingleton<IAuthServices, AuthServices>();
 
 // Read connection string to pgsql db
 var connectionString = builder.Configuration.GetConnectionString("Postgres");
@@ -82,7 +84,7 @@ var connectionString = builder.Configuration.GetConnectionString("Postgres");
 
 // Connect to db
 builder.Services.AddDbContext<TemplateDbContext>(options =>
-        options.UseNpgsql(connectionString));
+        options.UseNpgsql(connectionString), ServiceLifetime.Singleton);
 
 var app = builder.Build();
 

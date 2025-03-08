@@ -10,7 +10,7 @@ public class TokenServices : ITokenServices
 {
     public string GenereteJWTToken(User user, string secretKey)
     {
-        var claims = new []
+        var claims = new[]
         {
             new Claim(JwtRegisteredClaimNames.Sub, user.SecondName + user.FirstName),
             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),

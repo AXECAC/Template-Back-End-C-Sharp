@@ -16,7 +16,7 @@ public class UserServices : IUserServices
 
     public async Task<IBaseResponse<IEnumerable<User>>> GetUsers()
     {
-        var baseResponse = new BaseResponse<IEnumerable<User>>();
+        BaseResponse<IEnumerable<User>> baseResponse;
         try
         {
             var users = await _UserRepository.Select();
@@ -24,52 +24,41 @@ public class UserServices : IUserServices
             // Ok (204) but 0 elements
             if (users.Count == 0)
             {
-                baseResponse.Description = "Find 0 elements";
-                baseResponse.StatusCode = StatusCodes.NoContent;
+                baseResponse = BaseResponse<IEnumerable<User>>.NoContent("Find 0 elements");
                 return baseResponse;
             }
             // Ok (200)
-            baseResponse.Data = users;
-            baseResponse.StatusCode = StatusCodes.Ok;
+            baseResponse = BaseResponse<IEnumerable<User>>.Ok(users);
             return baseResponse;
         }
         catch (Exception ex)
         {
             // Server error (500)
-            return new BaseResponse<IEnumerable<User>>()
-            {
-                Description = $"{GetUsers} : {ex.Message}",
-                StatusCode = StatusCodes.InternalServerError,
-            };
+            return BaseResponse<IEnumerable<User>>.InternalServerError($"{GetUsers} : {ex.Message}");
         }
     }
 
     public async Task<IBaseResponse<User>> GetUser(int id)
     {
-        var baseResponse = new BaseResponse<User>();
+        BaseResponse<User> baseResponse;
         try
         {
             var user = await _UserRepository.Get(id);
             // NotFound (404)
             if (user == null)
             {
-                baseResponse.Description = "User not found";
-                baseResponse.StatusCode = StatusCodes.NotFound;
+                baseResponse = BaseResponse<User>.NotFound("User not found");
                 return baseResponse;
             }
-            baseResponse.Description = "User found";
+            // Found - Ok (200)
+            baseResponse = BaseResponse<User>.Ok(user, "User found");
             baseResponse.Data = user;
-            baseResponse.StatusCode = StatusCodes.Ok;
             return baseResponse;
         }
         catch (Exception ex)
         {
             // Server error (500)
-            return new BaseResponse<User>()
-            {
-                Description = $"{GetUser} : {ex.Message}",
-                StatusCode = StatusCodes.InternalServerError,
-            };
+            return BaseResponse<User>.InternalServerError($"{GetUser} : {ex.Message}");
         }
     }
 
@@ -77,87 +66,65 @@ public class UserServices : IUserServices
     {
         // Hashing Password
         userModel = _HashingServices.Hashing(userModel);
-
-        var baseResponse = new BaseResponse<User>();
         try
         {
             await _UserRepository.Create(userModel);
+            var baseResponse = BaseResponse<User>.Created("User created");
             return baseResponse;
         }
         catch (Exception ex)
         {
             // Server error (500)
-            return new BaseResponse<User>()
-            {
-                Description = $"{CreateUser} : {ex.Message}",
-                StatusCode = StatusCodes.InternalServerError,
-            };
+            return BaseResponse<User>.InternalServerError($"{CreateUser} : {ex.Message}");
         }
     }
 
     public async Task<IBaseResponse<bool>> DeleteUser(int id)
     {
-        var baseResponse = new BaseResponse<bool>()
-        {
-            StatusCode = StatusCodes.NoContent,
-            Data = true
-        };
+        BaseResponse<bool> baseResponse;
         try
         {
             var user = await _UserRepository.Get(id);
             // User not found (404)
             if (user == null)
             {
-                baseResponse.Description = "User not found";
-                baseResponse.StatusCode = StatusCodes.NotFound;
-                baseResponse.Data = false;
-
+                baseResponse = BaseResponse<bool>.NotFound("User not found");
                 return baseResponse;
             }
 
-            // User found (200)
+            // User found (204)
             await _UserRepository.Delete(user);
-
+            baseResponse = BaseResponse<bool>.NoContent();
             return baseResponse;
         }
         catch (Exception ex)
         {
             // Server error (500)
-            return new BaseResponse<bool>()
-            {
-                Description = $"{DeleteUser} : {ex.Message}",
-                StatusCode = StatusCodes.InternalServerError,
-            };
+            return BaseResponse<bool>.InternalServerError($"{DeleteUser} : {ex.Message}");
         }
     }
 
     public async Task<IBaseResponse<User>> GetUserByEmail(string email)
     {
-        var baseResponse = new BaseResponse<User>();
+        BaseResponse<User> baseResponse;
         try
         {
             var user = await _UserRepository.GetByEmail(email);
             // User not found (404)
             if (user == null)
             {
-                baseResponse.Description = "User not found";
-                baseResponse.StatusCode = StatusCodes.NotFound;
+                baseResponse = BaseResponse<User>.NotFound("User not found");
                 return baseResponse;
             }
 
             // User found (200)
-            baseResponse.Data = user;
-            baseResponse.StatusCode = StatusCodes.Ok;
+            baseResponse = BaseResponse<User>.Ok(user);
             return baseResponse;
         }
         catch (Exception ex)
         {
             // Server error (500)
-            return new BaseResponse<User>()
-            {
-                Description = $"{GetUserByEmail} : {ex.Message}",
-                StatusCode = StatusCodes.InternalServerError,
-            };
+            return BaseResponse<User>.InternalServerError($"{GetUserByEmail} : {ex.Message}");
         }
     }
 
@@ -166,7 +133,7 @@ public class UserServices : IUserServices
         // Hashing Password
         userModel = _HashingServices.Hashing(userModel);
 
-        var baseResponse = new BaseResponse<User>();
+        BaseResponse<User> baseResponse;
         try
         {
             var user = await _UserRepository.GetByEmail(oldEmail);
@@ -174,30 +141,26 @@ public class UserServices : IUserServices
             // User not found (404)
             if (user == null)
             {
-                baseResponse.StatusCode = StatusCodes.NotFound;
-                baseResponse.Description = "User not found";
+                baseResponse = BaseResponse<User>.NotFound("User not found");
                 return baseResponse;
             }
 
-            // User found (200)
+            // User found
             user.Email = userModel.Email;
             user.Password = userModel.Password;
             user.FirstName = userModel.FirstName;
             user.SecondName = userModel.SecondName;
 
+            // User edit (201)
             await _UserRepository.Update(user);
 
-            baseResponse.StatusCode = StatusCodes.Ok;
+            baseResponse = BaseResponse<User>.Created();
             return baseResponse;
         }
         catch (Exception ex)
         {
             // Server error (500)
-            return new BaseResponse<User>()
-            {
-                Description = $"{Edit} : {ex.Message}",
-                StatusCode = StatusCodes.InternalServerError,
-            };
+            return BaseResponse<User>.InternalServerError($"{Edit} : {ex.Message}");
         }
     }
 }
