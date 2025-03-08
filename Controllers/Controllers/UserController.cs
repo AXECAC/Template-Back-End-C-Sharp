@@ -52,7 +52,8 @@ namespace Controllers.UserController
         public async Task<IActionResult> GetUserById(int id)
         {
             // Id validation (Bad Input)
-            if (id < 1){
+            if (id < 1)
+            {
                 // Return StatusCode 422
                 return UnprocessableEntity();
             }
@@ -167,7 +168,8 @@ namespace Controllers.UserController
         public async Task<IActionResult> DeleteUser(int id)
         {
             // Id validation (Bad Input)
-            if (id < 1){
+            if (id < 1)
+            {
                 // Return StatusCode 422
                 return UnprocessableEntity();
             }

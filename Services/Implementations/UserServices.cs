@@ -24,17 +24,17 @@ public class UserServices : IUserServices
             // Ok (204) but 0 elements
             if (users.Count == 0)
             {
-				baseResponse = BaseResponse<IEnumerable<User>>.NoContent("Find 0 elements");
+                baseResponse = BaseResponse<IEnumerable<User>>.NoContent("Find 0 elements");
                 return baseResponse;
             }
             // Ok (200)
-			baseResponse = BaseResponse<IEnumerable<User>>.Ok(users);
+            baseResponse = BaseResponse<IEnumerable<User>>.Ok(users);
             return baseResponse;
         }
         catch (Exception ex)
         {
             // Server error (500)
-			return BaseResponse<IEnumerable<User>>.InternalServerError($"{GetUsers} : {ex.Message}");
+            return BaseResponse<IEnumerable<User>>.InternalServerError($"{GetUsers} : {ex.Message}");
         }
     }
 
@@ -47,18 +47,18 @@ public class UserServices : IUserServices
             // NotFound (404)
             if (user == null)
             {
-				baseResponse = BaseResponse<User>.NotFound("User not found");
+                baseResponse = BaseResponse<User>.NotFound("User not found");
                 return baseResponse;
             }
-			// Found - Ok (200)
-			baseResponse = BaseResponse<User>.Ok(user, "User found");
+            // Found - Ok (200)
+            baseResponse = BaseResponse<User>.Ok(user, "User found");
             baseResponse.Data = user;
             return baseResponse;
         }
         catch (Exception ex)
         {
             // Server error (500)
-			return BaseResponse<User>.InternalServerError($"{GetUser} : {ex.Message}");
+            return BaseResponse<User>.InternalServerError($"{GetUser} : {ex.Message}");
         }
     }
 
@@ -69,13 +69,13 @@ public class UserServices : IUserServices
         try
         {
             await _UserRepository.Create(userModel);
-			var baseResponse = BaseResponse<User>.Created("User created");
+            var baseResponse = BaseResponse<User>.Created("User created");
             return baseResponse;
         }
         catch (Exception ex)
         {
             // Server error (500)
-			return BaseResponse<User>.InternalServerError($"{CreateUser} : {ex.Message}");
+            return BaseResponse<User>.InternalServerError($"{CreateUser} : {ex.Message}");
         }
     }
 
@@ -88,19 +88,19 @@ public class UserServices : IUserServices
             // User not found (404)
             if (user == null)
             {
-				baseResponse = BaseResponse<bool>.NotFound("User not found");
+                baseResponse = BaseResponse<bool>.NotFound("User not found");
                 return baseResponse;
             }
 
             // User found (204)
             await _UserRepository.Delete(user);
-			baseResponse = BaseResponse<bool>.NoContent();
+            baseResponse = BaseResponse<bool>.NoContent();
             return baseResponse;
         }
         catch (Exception ex)
         {
             // Server error (500)
-			return BaseResponse<bool>.InternalServerError($"{DeleteUser} : {ex.Message}");
+            return BaseResponse<bool>.InternalServerError($"{DeleteUser} : {ex.Message}");
         }
     }
 
@@ -113,18 +113,18 @@ public class UserServices : IUserServices
             // User not found (404)
             if (user == null)
             {
-				baseResponse = BaseResponse<User>.NotFound("User not found");
+                baseResponse = BaseResponse<User>.NotFound("User not found");
                 return baseResponse;
             }
 
             // User found (200)
-			baseResponse = BaseResponse<User>.Ok(user);
+            baseResponse = BaseResponse<User>.Ok(user);
             return baseResponse;
         }
         catch (Exception ex)
         {
             // Server error (500)
-			return BaseResponse<User>.InternalServerError($"{GetUserByEmail} : {ex.Message}");
+            return BaseResponse<User>.InternalServerError($"{GetUserByEmail} : {ex.Message}");
         }
     }
 
@@ -141,7 +141,7 @@ public class UserServices : IUserServices
             // User not found (404)
             if (user == null)
             {
-				baseResponse = BaseResponse<User>.NotFound("User not found");
+                baseResponse = BaseResponse<User>.NotFound("User not found");
                 return baseResponse;
             }
 
@@ -151,16 +151,16 @@ public class UserServices : IUserServices
             user.FirstName = userModel.FirstName;
             user.SecondName = userModel.SecondName;
 
-			// User edit (201)
+            // User edit (201)
             await _UserRepository.Update(user);
 
-			baseResponse = BaseResponse<User>.Created();
+            baseResponse = BaseResponse<User>.Created();
             return baseResponse;
         }
         catch (Exception ex)
         {
             // Server error (500)
-			return BaseResponse<User>.InternalServerError($"{Edit} : {ex.Message}");
+            return BaseResponse<User>.InternalServerError($"{Edit} : {ex.Message}");
         }
     }
 }

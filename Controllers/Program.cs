@@ -41,9 +41,11 @@ builder.Services.AddSwaggerGen(setup =>
                     });
         });
 // Cors for web frontend
-builder.Services.AddCors(options => {
+builder.Services.AddCors(options =>
+{
     options.AddDefaultPolicy(
-        policy => {
+        policy =>
+        {
             policy.WithOrigins("http://localhost:5173")
             .AllowAnyHeader();
         });
@@ -82,7 +84,7 @@ var connectionString = builder.Configuration.GetConnectionString("Postgres");
 
 // Connect to db
 builder.Services.AddDbContext<TemplateDbContext>(options =>
-        options.UseNpgsql(connectionString),ServiceLifetime.Singleton);
+        options.UseNpgsql(connectionString), ServiceLifetime.Singleton);
 
 var app = builder.Build();
 

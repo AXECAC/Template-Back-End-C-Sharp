@@ -4,7 +4,7 @@ using DataBase;
 namespace Context;
 
 // Class UserRepository
-public class UserRepository : BaseRepository<User> ,IUserRepository
+public class UserRepository : BaseRepository<User>, IUserRepository
 {
     private readonly TemplateDbContext Db;
 
@@ -12,7 +12,7 @@ public class UserRepository : BaseRepository<User> ,IUserRepository
     {
         Db = db;
     }
-    
+
     // GeUser user by email
     public async Task<User>? GetByEmail(string email)
     {
