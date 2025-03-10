@@ -2,6 +2,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore;
+using StackExchange.Redis;
 using System.Text;
 using Services;
 using Context;
@@ -86,6 +87,13 @@ var connectionString = builder.Configuration.GetConnectionString("Postgres");
 builder.Services.AddDbContext<TemplateDbContext>(options =>
         options.UseNpgsql(connectionString), ServiceLifetime.Singleton);
 
+// Connect to redis
+connectionString = builder.Configuration.GetConnectionString("redis");
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = connectionString; ;
+    options.InstanceName = "local";
+});
 var app = builder.Build();
 
 //Add Swagger
