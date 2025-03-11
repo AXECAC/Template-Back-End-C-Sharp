@@ -51,7 +51,13 @@ builder.Services.AddCors(options =>
             .AllowAnyHeader();
         });
 });
-
+// Connect to redis
+var connectionString = builder.Configuration.GetConnectionString("redis");
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = connectionString;
+    options.InstanceName = "local";
+});
 // Add Authentication
 builder.Services.AddAuthentication(options =>
         {
@@ -80,20 +86,15 @@ builder.Services.AddSingleton<IHashingServices, HashingServices>();
 builder.Services.AddSingleton<IAuthServices, AuthServices>();
 
 // Read connection string to pgsql db
-var connectionString = builder.Configuration.GetConnectionString("Postgres");
+connectionString = builder.Configuration.GetConnectionString("Postgres");
 
 
 // Connect to db
 builder.Services.AddDbContext<TemplateDbContext>(options =>
         options.UseNpgsql(connectionString), ServiceLifetime.Singleton);
 
-// Connect to redis
-connectionString = builder.Configuration.GetConnectionString("redis");
-builder.Services.AddStackExchangeRedisCache(options =>
-{
-    options.Configuration = connectionString; ;
-    options.InstanceName = "local";
-});
+
+builder.Logging.AddConsole();
 var app = builder.Build();
 
 //Add Swagger

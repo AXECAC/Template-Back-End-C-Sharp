@@ -1,15 +1,16 @@
 using Microsoft.EntityFrameworkCore;
-
+using Microsoft.Extensions.Caching.Distributed;
 namespace Context;
 
 // Class BaseRepository
 public class BaseRepository<T> : IBaseRepository<T> where T : class
 {
     private readonly TemplateDbContext Db;
-
-    public BaseRepository(TemplateDbContext db)
+    private readonly IDistributedCache Cache;
+    public BaseRepository(TemplateDbContext db, IDistributedCache cache)
     {
         Db = db;
+        Cache = cache;
     }
 
     // Create model in db
