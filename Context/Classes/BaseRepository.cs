@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Context;
@@ -43,4 +44,11 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
 
         return model;
     }
+
+    // Find model in db with expression
+    public async Task<T>? FirstOrDefaultAsync(Expression<Func<T, bool>> expression)
+    {
+        return await Db.Set<T>().FirstOrDefaultAsync(expression);
+    }
+
 }
