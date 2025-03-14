@@ -2,7 +2,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore;
-using StackExchange.Redis;
+using Aspire.StackExchange.Redis;
 using System.Text;
 using Services;
 using Context;
@@ -53,11 +53,7 @@ builder.Services.AddCors(options =>
 });
 // Connect to redis
 var connectionString = builder.Configuration.GetConnectionString("redis");
-builder.Services.AddStackExchangeRedisCache(options =>
-{
-    options.Configuration = connectionString;
-    options.InstanceName = "local";
-});
+builder.AddRedisClient("redis");
 // Add Authentication
 builder.Services.AddAuthentication(options =>
         {
