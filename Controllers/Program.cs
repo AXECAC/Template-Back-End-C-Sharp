@@ -2,9 +2,10 @@ using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore;
-using Aspire.StackExchange.Redis;
 using System.Text;
 using Services;
+using Services.Caching;
+using DataBase;
 using Context;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -79,6 +80,7 @@ builder.Services.AddSingleton<IUserRepository, UserRepository>();
 builder.Services.AddSingleton<IUserServices, UserServices>();
 builder.Services.AddSingleton<ITokenServices, TokenServices>();
 builder.Services.AddSingleton<IHashingServices, HashingServices>();
+builder.Services.AddSingleton<ICachingServices<User>, CachingServices<User>>();
 builder.Services.AddSingleton<IAuthServices, AuthServices>();
 
 // Read connection string to pgsql db
