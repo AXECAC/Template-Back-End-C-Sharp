@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 namespace Context;
 
 // Interface IBaseRepository
@@ -14,4 +15,7 @@ public interface IBaseRepository<T>
 
     // Update model in db
     Task<T> Update(T model);
+
+    // Find model in db with expression
+    Task<T>? FirstOrDefaultAsync(Expression<Func<T, bool>> expression);
 }

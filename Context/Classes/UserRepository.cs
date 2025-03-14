@@ -50,10 +50,4 @@ public class UserRepository : BaseRepository<User>, IUserRepository
         }
         return user;
     }
-
-    // GeUser model from db by id
-    public async Task<User>? Get(int id)
-    {
-        return await Db.Users.FirstOrDefaultAsync(x => x.Id == id);
-    }
 }
