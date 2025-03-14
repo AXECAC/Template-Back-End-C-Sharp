@@ -84,7 +84,7 @@ public class UserServices : IUserServices
         BaseResponse<bool> baseResponse;
         try
         {
-            var user = await _UserRepository.Get(id);
+            var user = await _UserRepository.FirstOrDefaultAsync(x => x.Id == id);
             // User not found (404)
             if (user == null)
             {
@@ -136,7 +136,7 @@ public class UserServices : IUserServices
         BaseResponse<User> baseResponse;
         try
         {
-            var user = await _UserRepository.GetByEmail(oldEmail);
+            var user = await _UserRepository.FirstOrDefaultAsync(x => x.Email == oldEmail);
 
             // User not found (404)
             if (user == null)
