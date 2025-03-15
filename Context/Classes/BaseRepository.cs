@@ -51,12 +51,16 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
         return await Db.Set<T>().FirstOrDefaultAsync(expression);
     }
 
-
     // Get IQueryable
     public IQueryable<T> GetQueryable()
     {
         return Db.Set<T>();
     }
 
+    // Get IQueryable where used expression
+    public IQueryable<T> Where(Expression<Func<T, bool>> expression)
+    {
+        return Db.Set<T>().Where(expression);
+    }
 
 }
