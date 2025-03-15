@@ -18,4 +18,7 @@ public interface IBaseRepository<T>
 
     // Find model in db with expression
     Task<T>? FirstOrDefaultAsync(Expression<Func<T, bool>> expression);
+
+    // Get IQueryable
+    IQueryable<T> GetQueryable();
 }
