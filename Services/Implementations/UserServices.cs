@@ -1,5 +1,6 @@
 using Context;
 using DataBase;
+using Services.Caching;
 namespace Services;
 
 // Class UserServices
@@ -7,11 +8,14 @@ public class UserServices : IUserServices
 {
     private readonly IUserRepository _UserRepository;
     private readonly IHashingServices _HashingServices;
+    private readonly ICachingServices<User> _CachingServices;
 
-    public UserServices(IUserRepository userRepository, IHashingServices hashingServices)
+
+    public UserServices(IUserRepository userRepository, IHashingServices hashingServices, ICachingServices<User> cachingServices)
     {
         _UserRepository = userRepository;
         _HashingServices = hashingServices;
+        _CachingServices = cachingServices;
     }
 
     public async Task<IBaseResponse<IEnumerable<User>>> GetUsers()
@@ -43,7 +47,15 @@ public class UserServices : IUserServices
         BaseResponse<User> baseResponse;
         try
         {
-            var user = await _UserRepository.FirstOrDefaultAsync(x => x.Id == id);
+            // Ищем User в кэше
+            User? user = await _CachingServices.GetAsync(id);
+
+            if (user == null){
+                // Ищем User в БД
+                user = await _UserRepository.FirstOrDefaultAsync(x => x.Id == id);
+                _CachingServices.SetAsync(user, user.Id.ToString());
+            }
+
             // NotFound (404)
             if (user == null)
             {
