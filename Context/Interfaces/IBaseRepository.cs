@@ -21,4 +21,7 @@ public interface IBaseRepository<T>
 
     // Get IQueryable
     IQueryable<T> GetQueryable();
+
+    // Get IQueryable where used expression
+    IQueryable<T> Where(Expression<Func<T, bool>> expression);
 }
