@@ -6,12 +6,12 @@ namespace Middlewares
     {
         private readonly ILogger<ExceptionHandlerMiddleware> _logger;
 
-        // Обработчик исключений
         public ExceptionHandlerMiddleware(ILogger<ExceptionHandlerMiddleware> logger)
         {
             _logger = logger;
         }
 
+        // Обработчик исключений
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
             try
