@@ -75,6 +75,9 @@ builder.Services.AddAuthentication(options =>
 // Add my Middlewares
 builder.Services.AddSingleton<ExceptionHandlerMiddleware>();
 
+// Add my Logging
+builder.Services.AddLogging(builder => builder.AddConsole());
+
 // Add my Services
 builder.Services.AddSingleton<IUserRepository, UserRepository>();
 builder.Services.AddSingleton<IUserServices, UserServices>();

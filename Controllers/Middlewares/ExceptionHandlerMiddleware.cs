@@ -23,6 +23,19 @@ namespace Middlewares
                 // Создаем Id для логирования ошибки
                 var traceId = Guid.NewGuid();
 
+                // Цвета для выделения текста в логах
+                string red = "\x1b[91m";
+                string white = "\x1b[39m";
+                string green = "\x1b[92m";
+
+                // Добавляем логирование ошибки, где TraceId == Id логирования ошибки
+                // Message == текст ошибки
+                // StackTrace == вся остальная информация об ошибке
+                _logger.LogError("Error occurred while processing the request:\n" +
+                        $"{green}TraceId{white} : {traceId};\n" +
+                        $"{red}Message{white} : {ex.Message};\n" +
+                        $"{red}StackTrace{white} : {ex.StackTrace}");
+
                 // Задаем статус код для ответа
                 context.Response.StatusCode = StatusCodes.Status500InternalServerError;
 
