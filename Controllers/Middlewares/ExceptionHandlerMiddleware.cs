@@ -36,7 +36,7 @@ namespace Middlewares
                         $"{red}Message{white} : {ex.Message};\n" +
                         $"{red}StackTrace{white} : {ex.StackTrace}");
 
-                // Задаем статус код для ответа
+                // Задаем статус код 500 для ответа
                 context.Response.StatusCode = StatusCodes.Status500InternalServerError;
 
                 // Создаем описание ошибки
