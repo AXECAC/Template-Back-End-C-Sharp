@@ -70,7 +70,17 @@ public class UserServices : IUserServices
     public async Task<IBaseResponse<bool>> DeleteUser(int id)
     {
         BaseResponse<bool> baseResponse;
-        var user = await _UserRepository.FirstOrDefaultAsync(x => x.Id == id);
+
+        // Ищем User в кэше
+        User? user = await _CachingServices.GetAsync(id);
+        // User есть в кэше
+        if (user != null)
+        {
+            // Удаляем User из кеша
+            _CachingServices.RemoveAsync(user.Id.ToString());
+        }
+
+        user = await _UserRepository.FirstOrDefaultAsync(x => x.Id == id);
         // User not found (404)
         if (user == null)
         {
