@@ -78,13 +78,24 @@ public class UserServices : IUserServices
     {
         BaseResponse<bool> baseResponse;
 
-        // Ищем User в кэше
+        // Ищем User в кэше по Id
+
         User? user = await _CachingServices.GetAsync(id);
         // User есть в кэше
         if (user != null)
         {
-            // Удаляем User из кеша
+            // Удаляем User из кеша по Id
+
             _CachingServices.RemoveAsync(user.Id.ToString());
+        }
+        // Ищем User в кэше по Email
+        user = await _CachingServices.GetAsync(user.Email);
+        // User есть в кэше
+        if (user != null)
+        {
+            // Удаляем User из кеша по Email
+
+            _CachingServices.RemoveAsync(user.Email);
         }
 
         // Ищем User в БД
@@ -138,8 +149,16 @@ public class UserServices : IUserServices
 
         if (user != null)
         {
-            // Удаляем старого User
+            // Удаляем старого User по Id
             _CachingServices.RemoveAsync(user.Id.ToString());
+        }
+        // Ищем User в кэше по oldEmail
+        user = await _CachingServices.GetAsync(oldEmail);
+
+        if (user != null)
+        {
+            // Удаляем старого User по oldEmail
+            _CachingServices.RemoveAsync(oldEmail);
         }
         // Ищем User в БД
         user = await _UserRepository.FirstOrDefaultAsync(x => x.Email == oldEmail);
