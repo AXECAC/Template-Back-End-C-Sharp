@@ -35,13 +35,8 @@ namespace Controllers.UserController
                 return Ok(response.Data.ToList());
             }
             // 0 Users found
-            if (response.StatusCode == DataBase.StatusCodes.NoContent)
-            {
-                // Return response 200
-                return NoContent();
-            }
-            // Return StatusCode 500
-            return StatusCode(statusCode: 500);
+            // Return response 204
+            return NoContent();
         }
 
         // GetUserById method
@@ -66,13 +61,8 @@ namespace Controllers.UserController
                 return Ok(response.Data);
             }
             // User not found
-            if (response.StatusCode == DataBase.StatusCodes.NotFound)
-            {
-                // Return response 404
-                return NotFound();
-            }
-            // Return StatusCode 500
-            return StatusCode(statusCode: 500);
+            // Return response 404
+            return NotFound();
         }
 
         // GetUserByEmail method
@@ -97,13 +87,8 @@ namespace Controllers.UserController
                 return Ok(response.Data);
             }
             // User not found
-            if (response.StatusCode == DataBase.StatusCodes.NotFound)
-            {
-                // Return response 404
-                return NotFound();
-            }
-            // Return StatusCode 500
-            return StatusCode(statusCode: 500);
+            // Return response 404
+            return NotFound();
         }
 
         // Create method
@@ -182,13 +167,8 @@ namespace Controllers.UserController
                 return NoContent();
             }
             // User not found
-            if (response.StatusCode == DataBase.StatusCodes.NotFound)
-            {
-                // Return response 404
-                return NotFound();
-            }
-            // Return StatusCode 500
-            return StatusCode(statusCode: 500);
+            // Return response 404
+            return NotFound();
         }
     }
 }
