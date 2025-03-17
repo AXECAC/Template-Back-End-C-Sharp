@@ -47,8 +47,6 @@ public class UserServices : IUserServices
         {
             // Ищем User в БД
             user = await _UserRepository.FirstOrDefaultAsync(x => x.Id == id);
-            // Добавляем User в кэш
-            _CachingServices.SetAsync(user, user.Id.ToString());
         }
 
         // NotFound (404)
@@ -58,6 +56,8 @@ public class UserServices : IUserServices
             return baseResponse;
         }
         // Found - Ok (200)
+        // Добавляем User в кэш
+        _CachingServices.SetAsync(user, user.Id.ToString());
         baseResponse = BaseResponse<User>.Ok(user, "User found");
         baseResponse.Data = user;
         return baseResponse;
@@ -112,8 +112,6 @@ public class UserServices : IUserServices
         {
             // Ищем User в БД
             user = await _UserRepository.FirstOrDefaultAsync(x => x.Email == email);
-            // Добавляем User в кэш
-            _CachingServices.SetAsync(user, user.Email);
         }
         // User not found (404)
         if (user == null)
@@ -123,6 +121,8 @@ public class UserServices : IUserServices
         }
 
         // User found (200)
+        // Добавляем User в кэш
+        _CachingServices.SetAsync(user, user.Email);
         baseResponse = BaseResponse<User>.Ok(user);
         return baseResponse;
     }
@@ -159,6 +159,7 @@ public class UserServices : IUserServices
 
         // User edit (201)
         await _UserRepository.Update(user);
+
         // Добавляем измененного User
         _CachingServices.SetAsync(user, user.Id.ToString());
 
