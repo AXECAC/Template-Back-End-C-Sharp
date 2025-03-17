@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
 using Services;
+using Middlewares;
 using Context;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -71,6 +72,12 @@ builder.Services.AddAuthentication(options =>
                 };
             });
 
+// Add my Middlewares
+builder.Services.AddSingleton<ExceptionHandlerMiddleware>();
+
+// Add my Logging
+builder.Services.AddLogging(builder => builder.AddConsole());
+
 // Add my Services
 builder.Services.AddSingleton<IUserRepository, UserRepository>();
 builder.Services.AddSingleton<IUserServices, UserServices>();
@@ -96,6 +103,7 @@ app.UseSwaggerUI();
 // {
 // }
 
+app.UseMiddleware<ExceptionHandlerMiddleware>();
 // Cors
 app.UseCors();
 
