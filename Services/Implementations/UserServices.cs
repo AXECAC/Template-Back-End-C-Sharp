@@ -88,18 +88,18 @@ public class UserServices : IUserServices
 
             _CachingServices.RemoveAsync(user.Id.ToString());
         }
+        // Ищем User в БД
+        user = await _UserRepository.FirstOrDefaultAsync(x => x.Id == id);
+
         // Ищем User в кэше по Email
-        user = await _CachingServices.GetAsync(user.Email);
+        var userInCache = await _CachingServices.GetAsync(user.Email);
         // User есть в кэше
         if (user != null)
         {
             // Удаляем User из кеша по Email
 
-            _CachingServices.RemoveAsync(user.Email);
+            _CachingServices.RemoveAsync(userInCache.Email);
         }
-
-        // Ищем User в БД
-        user = await _UserRepository.FirstOrDefaultAsync(x => x.Id == id);
 
         // User not found (404)
         if (user == null)
