@@ -4,6 +4,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
 using Services;
+using Services.Caching;
+using DataBase;
 using Middlewares;
 using Context;
 
@@ -51,7 +53,9 @@ builder.Services.AddCors(options =>
             .AllowAnyHeader();
         });
 });
-
+// Connect to redis
+var connectionString = builder.Configuration.GetConnectionString("redis");
+builder.AddRedisClient("redis");
 // Add Authentication
 builder.Services.AddAuthentication(options =>
         {
@@ -83,16 +87,19 @@ builder.Services.AddSingleton<IUserRepository, UserRepository>();
 builder.Services.AddSingleton<IUserServices, UserServices>();
 builder.Services.AddSingleton<ITokenServices, TokenServices>();
 builder.Services.AddSingleton<IHashingServices, HashingServices>();
+builder.Services.AddSingleton<ICachingServices<User>, CachingServices<User>>();
 builder.Services.AddSingleton<IAuthServices, AuthServices>();
 
 // Read connection string to pgsql db
-var connectionString = builder.Configuration.GetConnectionString("Postgres");
+connectionString = builder.Configuration.GetConnectionString("Postgres");
 
 
 // Connect to db
 builder.Services.AddDbContext<TemplateDbContext>(options =>
         options.UseNpgsql(connectionString), ServiceLifetime.Singleton);
 
+
+builder.Logging.AddConsole();
 var app = builder.Build();
 
 //Add Swagger

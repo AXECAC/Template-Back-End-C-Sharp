@@ -12,6 +12,8 @@ services:
     networks:
       custom_network:
         ipv4_address: 10.100.0.2  # Static IP address for the db service
+    volumes:
+      - postgres_data:/data/postgres
 
   pgadmin:
     container_name: pgadmin4Template
@@ -25,7 +27,27 @@ services:
     networks:
       custom_network:
         ipv4_address: 10.100.0.3  # Static IP address for the db service
+    volumes:
+       - pgadmin:/var/lib/pgadmin
+  redis:
+    image: docker.io/bitnami/redis:7.4
+    environment:
+      # ALLOW_EMPTY_PASSWORD is recommended only for development.
+      - ALLOW_EMPTY_PASSWORD=yes
+      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+    ports:
+      - '6379:6379'
+    volumes:
+      - 'redis_data:/bitnami/redis/data'
+    networks:
+      custom_network:
+        ipv4_address: 10.100.0.4
 
+volumes:
+  redis_data:
+    driver: local
+  pgadmin:
+  postgres_data:
 networks:
   custom_network:
     driver: bridge

@@ -1,13 +1,11 @@
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
-
 namespace Context;
 
 // Class BaseRepository
 public class BaseRepository<T> : IBaseRepository<T> where T : class
 {
     private readonly TemplateDbContext Db;
-
     public BaseRepository(TemplateDbContext db)
     {
         Db = db;
