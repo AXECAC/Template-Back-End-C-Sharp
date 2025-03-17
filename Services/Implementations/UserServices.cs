@@ -96,7 +96,15 @@ public class UserServices : IUserServices
     public async Task<IBaseResponse<User>> GetUserByEmail(string email)
     {
         BaseResponse<User> baseResponse;
-        var user = await _UserRepository.FirstOrDefaultAsync(x => x.Email == email);
+        // Ищем User в кэше
+        User? user = await _CachingServices.GetAsync(email);
+
+        if (user == null)
+        {
+            // Ищем User в БД
+            user = await _UserRepository.FirstOrDefaultAsync(x => x.Email == email);
+            _CachingServices.SetAsync(user, user.Email);
+        }
         // User not found (404)
         if (user == null)
         {
