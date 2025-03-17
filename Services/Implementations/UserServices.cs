@@ -21,7 +21,9 @@ public class UserServices : IUserServices
     public async Task<IBaseResponse<IEnumerable<User>>> GetUsers()
     {
         BaseResponse<IEnumerable<User>> baseResponse;
+        // Ищем всех User в БД
         var users = await _UserRepository.Select();
+
         // in future try !users.Any()
         // Ok (204) but 0 elements
         if (users.Count == 0)
@@ -29,6 +31,7 @@ public class UserServices : IUserServices
             baseResponse = BaseResponse<IEnumerable<User>>.NoContent("Find 0 elements");
             return baseResponse;
         }
+
         // Ok (200)
         baseResponse = BaseResponse<IEnumerable<User>>.Ok(users);
         return baseResponse;
@@ -44,8 +47,10 @@ public class UserServices : IUserServices
         {
             // Ищем User в БД
             user = await _UserRepository.FirstOrDefaultAsync(x => x.Id == id);
+            // Добавляем User в кэш
             _CachingServices.SetAsync(user, user.Id.ToString());
         }
+
         // NotFound (404)
         if (user == null)
         {
@@ -58,12 +63,14 @@ public class UserServices : IUserServices
         return baseResponse;
     }
 
-    public async Task<IBaseResponse<User>> CreateUser(User userModel)
+    public async Task<IBaseResponse<bool>> CreateUser(User userModel)
     {
         // Hashing Password
         userModel = _HashingServices.Hashing(userModel);
+        // Создаем User
         await _UserRepository.Create(userModel);
-        var baseResponse = BaseResponse<User>.Created("User created");
+        // 
+        var baseResponse = BaseResponse<bool>.Created("User created");
         return baseResponse;
     }
 
@@ -80,7 +87,9 @@ public class UserServices : IUserServices
             _CachingServices.RemoveAsync(user.Id.ToString());
         }
 
+        // Ищем User в БД
         user = await _UserRepository.FirstOrDefaultAsync(x => x.Id == id);
+
         // User not found (404)
         if (user == null)
         {
@@ -103,6 +112,7 @@ public class UserServices : IUserServices
         {
             // Ищем User в БД
             user = await _UserRepository.FirstOrDefaultAsync(x => x.Email == email);
+            // Добавляем User в кэш
             _CachingServices.SetAsync(user, user.Email);
         }
         // User not found (404)
@@ -117,18 +127,27 @@ public class UserServices : IUserServices
         return baseResponse;
     }
 
-    public async Task<IBaseResponse<User>> Edit(string oldEmail, User userModel)
+    public async Task<IBaseResponse<bool>> Edit(string oldEmail, User userModel)
     {
         // Hashing Password
         userModel = _HashingServices.Hashing(userModel);
 
-        BaseResponse<User> baseResponse;
-        var user = await _UserRepository.FirstOrDefaultAsync(x => x.Email == oldEmail);
+        BaseResponse<bool> baseResponse;
+        // Ищем User в кэше по Id
+        User? user = await _CachingServices.GetAsync(userModel.Id);
+
+        if (user != null)
+        {
+            // Удаляем старого User
+            _CachingServices.RemoveAsync(user.Id.ToString());
+        }
+        // Ищем User в БД
+        user = await _UserRepository.FirstOrDefaultAsync(x => x.Email == oldEmail);
 
         // User not found (404)
         if (user == null)
         {
-            baseResponse = BaseResponse<User>.NotFound("User not found");
+            baseResponse = BaseResponse<bool>.NotFound("User not found");
             return baseResponse;
         }
 
@@ -140,8 +159,10 @@ public class UserServices : IUserServices
 
         // User edit (201)
         await _UserRepository.Update(user);
+        // Добавляем измененного User
+        _CachingServices.SetAsync(user, user.Id.ToString());
 
-        baseResponse = BaseResponse<User>.Created();
+        baseResponse = BaseResponse<bool>.Created();
         return baseResponse;
     }
 }
