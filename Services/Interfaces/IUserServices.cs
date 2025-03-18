@@ -1,18 +1,18 @@
 using DataBase;
 namespace Services;
 
-// Interface IUserServices
+// Интерфейс IUserServices
 public interface IUserServices
 {
     Task<IBaseResponse<IEnumerable<User>>> GetUsers();
 
     Task<IBaseResponse<User>> GetUser(int id);
 
-    Task<IBaseResponse<bool>> CreateUser(User userModel);
+    Task<IBaseResponse<bool>> CreateUser(User userEntity);
 
     Task<IBaseResponse<bool>> DeleteUser(int id);
 
     Task<IBaseResponse<User>> GetUserByEmail(string email);
 
-    Task<IBaseResponse<bool>> Edit(string oldEmail, User userModel);
+    Task<IBaseResponse<bool>> Edit(string oldEmail, User userEntity);
 }

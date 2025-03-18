@@ -2,7 +2,7 @@ using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 namespace Context;
 
-// Class BaseRepository
+// Класс BaseRepository
 public class BaseRepository<T> : IBaseRepository<T> where T : class
 {
     private readonly TemplateDbContext Db;
@@ -11,51 +11,51 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
         Db = db;
     }
 
-    // Create model in db
-    public async Task<bool> Create(T model)
+    // Создать сущность в Db 
+    public async Task<bool> Create(T entity)
     {
-        await Db.Set<T>().AddAsync(model);
+        await Db.Set<T>().AddAsync(entity);
         await Db.SaveChangesAsync();
         return true;
     }
 
-    // GeUser models from db
+    // Взять сущности из Db
     public async Task<List<T>> Select()
     {
         return await Db.Set<T>().ToListAsync();
     }
 
-    // Delete models from db
-    public async Task<bool> Delete(T model)
+    // Удалить сущности из Db
+    public async Task<bool> Delete(T entity)
     {
-        Db.Set<T>().Remove(model);
+        Db.Set<T>().Remove(entity);
         await Db.SaveChangesAsync();
 
         return true;
     }
 
-    // Update model in db
-    public async Task<T> Update(T model)
+    // Обновить сущность в Db
+    public async Task<T> Update(T entity)
     {
-        Db.Set<T>().Update(model);
+        Db.Set<T>().Update(entity);
         await Db.SaveChangesAsync();
 
-        return model;
+        return entity;
     }
 
-    // Find model in db with expression
+    // Найти сущность в Db с помощью выражения
     public async Task<T>? FirstOrDefaultAsync(Expression<Func<T, bool>> expression)
     {
         return await Db.Set<T>().FirstOrDefaultAsync(expression);
     }
 
-    // Get IQueryable
+    // Получить IQueryable
     public IQueryable<T> GetQueryable()
     {
         return Db.Set<T>();
     }
 
-    // Get IQueryable where used expression
+    // Получить IQueryable где используется выражение
     public IQueryable<T> Where(Expression<Func<T, bool>> expression)
     {
         return Db.Set<T>().Where(expression);

@@ -10,7 +10,7 @@ namespace Controllers.UserController
     [Authorize]
     [ApiController]
     [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError)]
-    // UserController class controller
+    // UserController класс контроллер
     public class UserController : Controller
     {
         private readonly IUserServices _UserServices;
@@ -20,7 +20,7 @@ namespace Controllers.UserController
             _UserServices = userServices;
         }
 
-        // GetUsers method
+        // GetUsers метод
         [HttpGet]
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status200OK)]
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status204NoContent)]
@@ -28,28 +28,28 @@ namespace Controllers.UserController
         {
             var response = await _UserServices.GetUsers();
 
-            // Some Users found
+            // Найдены некоторые Users
             if (response.StatusCode == DataBase.StatusCodes.Ok)
             {
-                // Return response 200
+                // Вернуть response 200
                 return Ok(response.Data.ToList());
             }
-            // 0 Users found
-            // Return response 204
+            // 0 Users найдено
+            // Вернуть response 204
             return NoContent();
         }
 
-        // GetUserById method
+        // GetUserById метод
         [HttpGet]
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status200OK)]
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound)]
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status422UnprocessableEntity)]
         public async Task<IActionResult> GetUserById(int id)
         {
-            // Id validation (Bad Input)
+            // Id валидация (Плохой ввод)
             if (id < 1)
             {
-                // Return StatusCode 422
+                // Вернуть StatusCode 422
                 return UnprocessableEntity();
             }
             var response = await _UserServices.GetUser(id);
@@ -57,117 +57,118 @@ namespace Controllers.UserController
             // User found
             if (response.StatusCode == DataBase.StatusCodes.Ok)
             {
-                // Return response 200
+                // Вернуть response 200
                 return Ok(response.Data);
             }
-            // User not found
-            // Return response 404
+
+            // User не найден
+            // Вернуть response 404
             return NotFound();
         }
 
-        // GetUserByEmail method
+        // GetUserByEmail метод
         [HttpGet]
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status200OK)]
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound)]
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status422UnprocessableEntity)]
         public async Task<IActionResult> GetUserByEmail(string email)
         {
-            // Email not Valid (Bad input)
+            // Email not Valid (Плохой ввод)
             if (!email.IsValidEmail())
             {
-                // Return StatusCode 422
+                // Вернуть StatusCode 422
                 return UnprocessableEntity();
             }
             var response = await _UserServices.GetUserByEmail(email);
 
-            // User found
+            // User найден
             if (response.StatusCode == DataBase.StatusCodes.Ok)
             {
-                // Return response 200
+                // Вернуть response 200
                 return Ok(response.Data);
             }
-            // User not found
-            // Return response 404
+            // User не найден
+            // Вернуть response 404
             return NotFound();
         }
 
-        // Create method
+        // Create метод
         [HttpPost]
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status201Created)]
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status409Conflict)]
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status422UnprocessableEntity)]
-        public async Task<IActionResult> Create(User userModel)
+        public async Task<IActionResult> Create(User userEntity)
         {
-            // User not Valid (Bad input)
-            if (!userModel.IsValid())
+            // User not Valid (Плохой ввод)
+            if (!userEntity.IsValid())
             {
-                // Return StatusCode 422
+                // Вернуть StatusCode 422
                 return UnprocessableEntity();
             }
-            // Check usage "new email"
-            var response = await _UserServices.GetUserByEmail(userModel.Email);
-            // Conflict: this email already used
+            // Проверить существование "new email"
+            var response = await _UserServices.GetUserByEmail(userEntity.Email);
+            // Conflict: Этот email уже существует
             if (response.StatusCode == DataBase.StatusCodes.Ok)
             {
                 return Conflict();
             }
-            // Create User
-            await _UserServices.CreateUser(userModel);
-            // Return response 201
-            return CreatedAtAction(nameof(userModel), new { message = "Successed" });
+            // Создать User
+            await _UserServices.CreateUser(userEntity);
+            // Вернуть response 201
+            return CreatedAtAction(nameof(userEntity), new { message = "Successed" });
         }
 
-        // Edit method
+        // Edit метод
         [HttpPost]
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status201Created)]
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound)]
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status422UnprocessableEntity)]
-        public async Task<IActionResult> Edit(User userModel, string oldEmail)
+        public async Task<IActionResult> Edit(User userEntity, string oldEmail)
         {
-            // User not Valid (Bad input)
-            if (!userModel.IsValid() || !oldEmail.IsValidEmail())
+            // User not Valid (Плохой ввод)
+            if (!userEntity.IsValid() || !oldEmail.IsValidEmail())
             {
-                // Return StatusCode 422
+                // Вернуть StatusCode 422
                 return UnprocessableEntity();
             }
 
-            // Check oldEmail is real
+            // Проверить oldEmail существует
             var response = await _UserServices.GetUserByEmail(oldEmail);
-            // NotFound: Edit user not found
+            // NotFound: Edit user не найден
             if (response.StatusCode == DataBase.StatusCodes.NotFound)
             {
                 return NotFound();
             }
 
-            // Edit User
-            await _UserServices.Edit(oldEmail, userModel);
-            // Return response 201
-            return CreatedAtAction(nameof(userModel), new { message = "Successed" });
+            // Изменить User
+            await _UserServices.Edit(oldEmail, userEntity);
+            // Вернуть response 201
+            return CreatedAtAction(nameof(userEntity), new { message = "Successed" });
         }
 
-        // Delete method
+        // Delete метод
         [HttpDelete]
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status204NoContent)]
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound)]
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status422UnprocessableEntity)]
         public async Task<IActionResult> DeleteUser(int id)
         {
-            // Id validation (Bad Input)
+            // Id validation (Плохой ввод)
             if (id < 1)
             {
-                // Return StatusCode 422
+                // Вернуть StatusCode 422
                 return UnprocessableEntity();
             }
             var response = await _UserServices.DeleteUser(id);
 
-            // User Deleted
+            // User удален
             if (response.StatusCode == DataBase.StatusCodes.NoContent)
             {
-                // Return response 204
+                // Вернуть response 204
                 return NoContent();
             }
-            // User not found
-            // Return response 404
+            // User не найден
+            // Вернуть response 404
             return NotFound();
         }
     }

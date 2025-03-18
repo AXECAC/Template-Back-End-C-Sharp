@@ -5,7 +5,7 @@ using System.Text;
 using DataBase;
 namespace Services;
 
-// Class TokenServices
+// Класс TokenServices
 public class TokenServices : ITokenServices
 {
     public string GenereteJWTToken(User user, string secretKey)
@@ -15,7 +15,7 @@ public class TokenServices : ITokenServices
             new Claim(JwtRegisteredClaimNames.Sub, user.SecondName + user.FirstName),
             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new Claim(ClaimTypes.Email, user.Email),
-            // For future where add roles
+            // На будущее добавить роли
             // new Claim(ClaimTypes.Role, user.Role),
         };
 

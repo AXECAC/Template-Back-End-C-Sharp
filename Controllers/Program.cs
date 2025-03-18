@@ -11,15 +11,15 @@ using Context;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Добавить сервисы в контейнер
 builder.Services.AddControllersWithViews();
 
-//Add Swagger
+//Добавить Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(setup =>
         {
-            // Add JWT to Swagger
-            // Include 'SecurityScheme' to use JWT Authentication
+            // Добавить JWT в Swagger
+            // Добавить 'SecurityScheme' чтобы использовать JWT Аутентификацию
             var jwtSecurityScheme = new OpenApiSecurityScheme
             {
                 BearerFormat = "JWT",
@@ -43,7 +43,8 @@ builder.Services.AddSwaggerGen(setup =>
                         { jwtSecurityScheme, Array.Empty<string>() }
                     });
         });
-// Cors for web frontend
+
+// Cors для фронта на web
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(
@@ -53,10 +54,18 @@ builder.Services.AddCors(options =>
             .AllowAnyHeader();
         });
 });
-// Connect to redis
-var connectionString = builder.Configuration.GetConnectionString("redis");
+
+// Подключение к redis
 builder.AddRedisClient("redis");
-// Add Authentication
+
+// Прочитать connection string к postgres
+var connectionString = builder.Configuration.GetConnectionString("Postgres");
+
+// Подключиться к БД
+builder.Services.AddDbContext<TemplateDbContext>(options =>
+        options.UseNpgsql(connectionString), ServiceLifetime.Singleton);
+
+// Добавить Аутентификацию
 builder.Services.AddAuthentication(options =>
         {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -76,13 +85,14 @@ builder.Services.AddAuthentication(options =>
                 };
             });
 
-// Add my Middlewares
+// Добавить наши Middlewares
 builder.Services.AddSingleton<ExceptionHandlerMiddleware>();
 
-// Add my Logging
+// Добавить наши Logging
 builder.Services.AddLogging(builder => builder.AddConsole());
+builder.Logging.AddConsole();
 
-// Add my Services
+// Добавить наши Services
 builder.Services.AddSingleton<IUserRepository, UserRepository>();
 builder.Services.AddSingleton<IUserServices, UserServices>();
 builder.Services.AddSingleton<ITokenServices, TokenServices>();
@@ -90,22 +100,13 @@ builder.Services.AddSingleton<IHashingServices, HashingServices>();
 builder.Services.AddSingleton<ICachingServices<User>, CachingServices<User>>();
 builder.Services.AddSingleton<IAuthServices, AuthServices>();
 
-// Read connection string to pgsql db
-connectionString = builder.Configuration.GetConnectionString("Postgres");
 
-
-// Connect to db
-builder.Services.AddDbContext<TemplateDbContext>(options =>
-        options.UseNpgsql(connectionString), ServiceLifetime.Singleton);
-
-
-builder.Logging.AddConsole();
 var app = builder.Build();
 
-//Add Swagger
+//Добавить Swagger
 app.UseSwagger();
 app.UseSwaggerUI();
-// If you don't need debug you must add UseSwagger... to this if
+// Если вам не нужен debug, добавьте UseSwagger... в этот if
 // if (app.Environment.IsDevelopment())
 // {
 // }

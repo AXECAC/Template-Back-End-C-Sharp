@@ -1,7 +1,7 @@
 using DataBase;
 namespace Services;
 
-// Interface IAuthServices
+// Интерфейс IAuthServices
 public interface IAuthServices
 {
     Task<IBaseResponse<string>> TryRegister(User user, string secretKey);

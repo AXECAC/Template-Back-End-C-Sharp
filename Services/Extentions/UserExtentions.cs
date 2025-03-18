@@ -2,10 +2,10 @@ using DataBase;
 
 namespace Extentions;
 
-// Class UserExtentions
+// Класс UserExtentions
 public static class UserExtentions
 {
-    // User validation
+    // Валидация User
     public static bool IsValid(this User user)
     {
         if (user.Id < 0 || !user.Email.IsValidEmail() || !user.Password.IsValidPassword() ||
@@ -16,7 +16,7 @@ public static class UserExtentions
         return true;
     }
 
-    // Login User validation
+    // Валидация Login User
     public static bool IsValid(this LoginUser form)
     {
         if (!form.Email.IsValidEmail() || !form.Password.IsValidPassword())
@@ -26,10 +26,10 @@ public static class UserExtentions
         return true;
     }
 
-    // Email validation
+    // Валидация Email
     public static bool IsValidEmail(this string email)
     {
-        // Need continue in future
+        // Продолжить в будущем
         if (email == "" || !email.Contains('@'))
         {
             return false;
@@ -37,10 +37,10 @@ public static class UserExtentions
         return true;
     }
 
-    // Password validation
+    // Валидация Password
     public static bool IsValidPassword(this string password)
     {
-        // Need continue in future
+        // Продолжить в будущем
         if (password == "")
         {
             return false;

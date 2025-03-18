@@ -3,7 +3,7 @@ using DataBase;
 using Services.Caching;
 namespace Services;
 
-// Class UserServices
+// Класс UserServices
 public class UserServices : IUserServices
 {
     private readonly IUserRepository _UserRepository;
@@ -63,13 +63,12 @@ public class UserServices : IUserServices
         return baseResponse;
     }
 
-    public async Task<IBaseResponse<bool>> CreateUser(User userModel)
+    public async Task<IBaseResponse<bool>> CreateUser(User userEntity)
     {
-        // Hashing Password
-        userModel = _HashingServices.Hashing(userModel);
+        // Хэширование Password
+        userEntity = _HashingServices.Hashing(userEntity);
         // Создаем User
-        await _UserRepository.Create(userModel);
-        // 
+        await _UserRepository.Create(userEntity);
         var baseResponse = BaseResponse<bool>.Created("User created");
         return baseResponse;
     }
@@ -101,13 +100,13 @@ public class UserServices : IUserServices
             _CachingServices.RemoveAsync(userInCache.Email);
         }
 
-        // User not found (404)
+        // User не найден (404)
         if (user == null)
         {
             baseResponse = BaseResponse<bool>.NotFound("User not found");
             return baseResponse;
         }
-        // User found (204)
+        // User Найден (204)
         await _UserRepository.Delete(user);
         baseResponse = BaseResponse<bool>.NoContent();
         return baseResponse;
@@ -138,14 +137,14 @@ public class UserServices : IUserServices
         return baseResponse;
     }
 
-    public async Task<IBaseResponse<bool>> Edit(string oldEmail, User userModel)
+    public async Task<IBaseResponse<bool>> Edit(string oldEmail, User userEntity)
     {
-        // Hashing Password
-        userModel = _HashingServices.Hashing(userModel);
+        // Хэширование Password
+        userEntity = _HashingServices.Hashing(userEntity);
 
         BaseResponse<bool> baseResponse;
         // Ищем User в кэше по Id
-        User? user = await _CachingServices.GetAsync(userModel.Id);
+        User? user = await _CachingServices.GetAsync(userEntity.Id);
 
         if (user != null)
         {
@@ -171,10 +170,10 @@ public class UserServices : IUserServices
         }
 
         // User found
-        user.Email = userModel.Email;
-        user.Password = userModel.Password;
-        user.FirstName = userModel.FirstName;
-        user.SecondName = userModel.SecondName;
+        user.Email = userEntity.Email;
+        user.Password = userEntity.Password;
+        user.FirstName = userEntity.FirstName;
+        user.SecondName = userEntity.SecondName;
 
         // User edit (201)
         await _UserRepository.Update(user);

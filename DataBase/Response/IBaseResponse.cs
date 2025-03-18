@@ -1,9 +1,9 @@
 namespace DataBase;
 
-// Interface IBaseResponse
+// Интерфейс IBaseResponse
 public interface IBaseResponse<T>
 {
-	string Description { get; }
-	StatusCodes StatusCode { get; }
-	T Data { get; }
+    string Description { get; }
+    StatusCodes StatusCode { get; }
+    T Data { get; }
 }

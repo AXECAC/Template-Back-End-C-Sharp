@@ -1,27 +1,27 @@
 using System.Linq.Expressions;
 namespace Context;
 
-// Interface IBaseRepository
+// Интерфейс IBaseRepository
 public interface IBaseRepository<T>
 {
-    // Create model in db
-    Task<bool> Create(T model);
+    // Создать сущность в Db
+    Task<bool> Create(T entity);
 
-    // Get models from db
+    // Получить сущности из Db
     Task<List<T>>? Select();
 
-    // Delete models from db
-    Task<bool> Delete(T model);
+    // Удалить сущность из Db
+    Task<bool> Delete(T entity);
 
-    // Update model in db
-    Task<T> Update(T model);
+    // Обновить сущность в Db
+    Task<T> Update(T entity);
 
-    // Find model in db with expression
+    // Найти сущность в Db с помощью выражения
     Task<T>? FirstOrDefaultAsync(Expression<Func<T, bool>> expression);
 
-    // Get IQueryable
+    // Получить IQueryable
     IQueryable<T> GetQueryable();
 
-    // Get IQueryable where used expression
+    // Получить IQueryable где используется выражение
     IQueryable<T> Where(Expression<Func<T, bool>> expression);
 }

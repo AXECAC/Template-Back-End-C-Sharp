@@ -3,13 +3,13 @@ namespace DataBase;
 public enum StatusCodes
 {
     Ok, // 200 --- Ok
-    Created, // 201 --- Ok created
-    NoContent, // 204 --- Ok empty response
+    Created, // 201 --- Ok создано
+    NoContent, // 204 --- Ok пустой response
     Unauthorized, // 401 --- Unauthorized
-    Forbidden, // 403 --- Authorized but permision denide
+    Forbidden, // 403 --- Authorized но доступ запрещен
     NotFound, // 404 --- NotFound
-    Conflict, // 409 --- Conflict (this email already exists)
-    UnprocessableContent, // 422 --- Semantic trouble request
-    TooManyRequests, // 429 --- User send too many requests for time (for the future)
-    InternalServerError, // 500 --- Server error
+    Conflict, // 409 --- Conflict (этот email уже существует)
+    UnprocessableContent, // 422 --- Неправильный формат request
+    TooManyRequests, // 429 --- слишком много запросов от User
+    InternalServerError, // 500 --- Ошибка сервера
 }

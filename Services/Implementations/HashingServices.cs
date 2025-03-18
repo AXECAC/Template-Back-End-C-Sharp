@@ -2,7 +2,7 @@ using System.Security.Cryptography;
 using DataBase;
 namespace Services;
 
-// Class HashingServices
+// Класс HashingServices
 public class HashingServices : IHashingServices
 {
     private static string HashFunc(string input)
