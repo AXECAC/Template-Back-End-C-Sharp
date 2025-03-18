@@ -8,7 +8,7 @@ namespace Controllers.AuthController
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    // StartController class controller
+    // Класс контроллер AuthController
     public class AuthController : Controller
     {
         private readonly IAuthServices _AuthServices;
@@ -26,33 +26,33 @@ namespace Controllers.AuthController
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status409Conflict)]
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status422UnprocessableEntity)]
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError)]
-        // Registration method
+        // метод Registration
         public async Task<IActionResult> Registration(User user)
         {
-            // Secret key empty
+            // Secret key пуст
             if (_secretKey == "")
             {
-                // Return StatusCode 500
+                // Вернуть StatusCode 500
                 return StatusCode(statusCode: 500);
             }
-            // User not Valid (Bad input)
+            // User not Valid (Плохой ввод)
             if (!user.IsValid())
             {
-                // Return StatusCode 422
+                // Вернуть StatusCode 422
                 return UnprocessableEntity();
             }
-            // Try Registration
+            // Попытка Registration
             var response = await _AuthServices.TryRegister(user, _secretKey);
-            // Registration successed
+            // Registration успешна
             if (response.StatusCode == DataBase.StatusCodes.Created)
             {
-                // Return token (201)
+                // Вернуть токен (201)
                 return CreatedAtAction(nameof(user), new { response.Data });
             }
-            // This email already used
+            // Такой email уже существует
             else
             {
-                // Return Conflict (409)
+                // Вернуть Conflict (409)
                 return Conflict();
             }
 
@@ -62,33 +62,33 @@ namespace Controllers.AuthController
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status422UnprocessableEntity)]
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError)]
-        // Login method
+        // Метод Login
         public async Task<IActionResult> Login(LoginUser form)
         {
             // Secret key empty
             if (_secretKey == "")
             {
-                // Return StatusCode 500
+                // Вернуть StatusCode 500
                 return StatusCode(statusCode: 500);
             }
-            // User not Valid (Bad input)
+            // User not Valid (Плохой ввод)
             if (!form.IsValid())
             {
-                // Return StatusCode 422
+                // Вернуть StatusCode 422
                 return UnprocessableEntity();
             }
-            // Try Login
+            // Попытка Login
             var response = await _AuthServices.TryLogin(form, _secretKey);
-            // Login successed
+            // Login успешна
             if (response.StatusCode == DataBase.StatusCodes.Ok)
             {
-                // Return token (200)
+                // Вернуть токен (200)
                 return Ok(new { response.Data });
             }
-            // Email or Password wrong
+            // неправильные Email или Password 
             else
             {
-                // Return Conflict (401)
+                // Вернуть Conflict (401)
                 return Unauthorized();
             }
 
@@ -98,10 +98,10 @@ namespace Controllers.AuthController
         [Authorize]
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status200OK)]
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status401Unauthorized)]
-        // Check token (instead of login if have token old valid token)(max old 3 hour)
+        // Проверить токен (на валидность, не является ли он старым)(максимум 3 часа жизни)
         public IActionResult Check()
         {
-            // Token valid or else will be returned Unauthorized
+            // Токен валидный, а иначе вернуть Unauthorized
             return Ok();
         }
     }

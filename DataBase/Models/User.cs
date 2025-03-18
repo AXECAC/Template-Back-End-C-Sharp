@@ -1,6 +1,6 @@
 namespace DataBase;
 
-// Class User
+// Класс User
 
 public class User
 {

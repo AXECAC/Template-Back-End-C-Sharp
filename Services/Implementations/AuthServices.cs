@@ -2,7 +2,7 @@ using Context;
 using DataBase;
 namespace Services;
 
-// Class AuthServices
+// Класс AuthServices
 public class AuthServices : IAuthServices
 {
     private readonly IUserRepository _UserRepository;
@@ -19,24 +19,24 @@ public class AuthServices : IAuthServices
 
     public async Task<IBaseResponse<string>> TryRegister(User user, string secretKey)
     {
-        // Hashing Password
+        // Хэширование Password
         user = _HashingServices.Hashing(user);
 
         BaseResponse<string> baseResponse;
         try
         {
-            // Find new user email
+            //Найти User по email
             var userDb = await _UserRepository.GetByEmail(user.Email);
 
-            // New user
+            // Новый User
             if (userDb == null)
             {
-                // Create new user
+                // Создать новый User
                 await _UserRepository.Create(user);
                 // Created (201)
                 baseResponse = BaseResponse<string>.Created(data: _TokenServices.GenereteJWTToken(user, secretKey));
             }
-            // This email already exists
+            // Этот email уже существует
             else
             {
                 // Conflict (409)
@@ -54,19 +54,19 @@ public class AuthServices : IAuthServices
 
     public async Task<IBaseResponse<string>> TryLogin(LoginUser form, string secretKey)
     {
-        // Hashing Password
+        // Хэширование Password
         User user = _HashingServices.Hashing(form);
 
         BaseResponse<string> baseResponse;
         try
         {
-            // Find user email
+            // Найти user по email
             var userDb = await _UserRepository.GetByEmail(user.Email);
 
-            // User exists
+            // User существует
             if (userDb != null)
             {
-                // Compare hash password
+                // Сравнить хэш пароля
                 if (user.Password == userDb.Password)
                 {
                     // Ok (200)
@@ -78,7 +78,7 @@ public class AuthServices : IAuthServices
                     baseResponse = BaseResponse<string>.Unauthorized("Bad password");
                 }
             }
-            // User not exists
+            // User не существует
             else
             {
                 // Unauthorized (401)

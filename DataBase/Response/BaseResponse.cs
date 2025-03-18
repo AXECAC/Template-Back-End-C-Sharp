@@ -9,7 +9,7 @@ public class BaseResponse<T> : IBaseResponse<T>
 
     public T Data { get; set; }
 
-    // Ok response generate (200)
+    // Ok response генерация (200)
     public static BaseResponse<T> Ok(T data, string description = "")
     {
         return new BaseResponse<T>()
@@ -20,7 +20,7 @@ public class BaseResponse<T> : IBaseResponse<T>
         };
     }
 
-    // Empty Ok response generate (200)
+    // Пустой Ok response генерация (200)
     public static BaseResponse<T> Ok(string description = "")
     {
         return new BaseResponse<T>()
@@ -30,7 +30,7 @@ public class BaseResponse<T> : IBaseResponse<T>
         };
     }
 
-    // Created response generate (201)
+    // Created response генерация (201)
     public static BaseResponse<T> Created(T data, string description = "")
     {
         return new BaseResponse<T>()
@@ -41,7 +41,7 @@ public class BaseResponse<T> : IBaseResponse<T>
         };
     }
 
-    // Empty Created response generate (201)
+    // Пустой Created response генерация (201)
     public static BaseResponse<T> Created(string description = "")
     {
         return new BaseResponse<T>()
@@ -51,7 +51,7 @@ public class BaseResponse<T> : IBaseResponse<T>
         };
     }
 
-    // NoContent response generate (204)
+    // NoContent response генерация (204)
     public static BaseResponse<T> NoContent(string description = "")
     {
         return new BaseResponse<T>()
@@ -61,7 +61,7 @@ public class BaseResponse<T> : IBaseResponse<T>
         };
     }
 
-    // Unauthorized response generate (401)
+    // Unauthorized response генерация (401)
     public static BaseResponse<T> Unauthorized(string description = "")
     {
         return new BaseResponse<T>()
@@ -71,7 +71,7 @@ public class BaseResponse<T> : IBaseResponse<T>
         };
     }
 
-    // NotFound response generate (404)
+    // NotFound response генерация (404)
     public static BaseResponse<T> NotFound(string description = "")
     {
         return new BaseResponse<T>()
@@ -81,7 +81,7 @@ public class BaseResponse<T> : IBaseResponse<T>
         };
     }
 
-    // Conflict response generate (409)
+    // Conflict response генерация (409)
     public static BaseResponse<T> Conflict(string description = "")
     {
         return new BaseResponse<T>()
@@ -91,7 +91,7 @@ public class BaseResponse<T> : IBaseResponse<T>
         };
     }
 
-    // InternalServerError response generate (500)
+    // InternalServerError response генерация (500)
     public static BaseResponse<T> InternalServerError(string description = "")
     {
         return new BaseResponse<T>()

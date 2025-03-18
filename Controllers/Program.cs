@@ -8,15 +8,15 @@ using Context;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Добавить сервисы в контейнер
 builder.Services.AddControllersWithViews();
 
-//Add Swagger
+//Добавить Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(setup =>
         {
-            // Add JWT to Swagger
-            // Include 'SecurityScheme' to use JWT Authentication
+            // Добавить JWT в Swagger
+            // Добавить 'SecurityScheme' чтобы использовать JWT Аутентификацию
             var jwtSecurityScheme = new OpenApiSecurityScheme
             {
                 BearerFormat = "JWT",
@@ -40,7 +40,7 @@ builder.Services.AddSwaggerGen(setup =>
                         { jwtSecurityScheme, Array.Empty<string>() }
                     });
         });
-// Cors for web frontend
+// Cors для фронта на веб
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(
@@ -51,7 +51,7 @@ builder.Services.AddCors(options =>
         });
 });
 
-// Add Authentication
+// Добавить Аутентификацию
 builder.Services.AddAuthentication(options =>
         {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -71,27 +71,27 @@ builder.Services.AddAuthentication(options =>
                 };
             });
 
-// Add my Services
+// Добавить my Services
 builder.Services.AddSingleton<IUserRepository, UserRepository>();
 builder.Services.AddSingleton<IUserServices, UserServices>();
 builder.Services.AddSingleton<ITokenServices, TokenServices>();
 builder.Services.AddSingleton<IHashingServices, HashingServices>();
 builder.Services.AddSingleton<IAuthServices, AuthServices>();
 
-// Read connection string to pgsql db
+// Прочитать connection string к postgres
 var connectionString = builder.Configuration.GetConnectionString("Postgres");
 
 
-// Connect to db
+// Подключиться к бд
 builder.Services.AddDbContext<TemplateDbContext>(options =>
         options.UseNpgsql(connectionString), ServiceLifetime.Singleton);
 
 var app = builder.Build();
 
-//Add Swagger
+//Добавить Swagger
 app.UseSwagger();
 app.UseSwaggerUI();
-// If you don't need debug you must add UseSwagger... to this if
+// Если вам не нужен debug, добавьте UseSwagger... в этот if
 // if (app.Environment.IsDevelopment())
 // {
 // }

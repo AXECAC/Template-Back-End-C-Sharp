@@ -1,7 +1,7 @@
 using DataBase;
 namespace Services;
 
-// Interface IUserServices
+// Интерфейс IUserServices
 public interface IUserServices
 {
     Task<IBaseResponse<IEnumerable<User>>> GetUsers();

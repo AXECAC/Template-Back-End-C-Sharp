@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using DataBase;
 namespace Context;
 
-// Class Context
+// Класс Context
 public class TemplateDbContext : DbContext
 {
     public TemplateDbContext(DbContextOptions<TemplateDbContext> options) : base(options)

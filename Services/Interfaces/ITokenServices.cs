@@ -1,7 +1,7 @@
 using DataBase;
 namespace Services;
 
-// Interface ITokenServices
+// Интерфейс ITokenServices
 public interface ITokenServices
 {
     public string GenereteJWTToken(User user, string secretKey);

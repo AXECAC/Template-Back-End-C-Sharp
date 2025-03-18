@@ -1,7 +1,7 @@
 using DataBase;
 namespace Services;
 
-// Interface IHashingServices
+// Интерфейс IHashingServices
 public interface IHashingServices
 {
     User Hashing(User userModel);

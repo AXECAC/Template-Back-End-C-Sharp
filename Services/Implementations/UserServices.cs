@@ -2,7 +2,7 @@ using Context;
 using DataBase;
 namespace Services;
 
-// Class UserServices
+// Класс UserServices
 public class UserServices : IUserServices
 {
     private readonly IUserRepository _UserRepository;
@@ -20,8 +20,8 @@ public class UserServices : IUserServices
         try
         {
             var users = await _UserRepository.Select();
-            // in future try !users.Any()
-            // Ok (204) but 0 elements
+            // В будущем попробовать !users.Any()
+            // Ok (204) но 0 элементов
             if (users.Count == 0)
             {
                 baseResponse = BaseResponse<IEnumerable<User>>.NoContent("Find 0 elements");
@@ -64,7 +64,7 @@ public class UserServices : IUserServices
 
     public async Task<IBaseResponse<User>> CreateUser(User userModel)
     {
-        // Hashing Password
+        // Хэширование Password
         userModel = _HashingServices.Hashing(userModel);
         try
         {
@@ -85,14 +85,14 @@ public class UserServices : IUserServices
         try
         {
             var user = await _UserRepository.Get(id);
-            // User not found (404)
+            // User не найден (404)
             if (user == null)
             {
                 baseResponse = BaseResponse<bool>.NotFound("User not found");
                 return baseResponse;
             }
 
-            // User found (204)
+            // User найден (204)
             await _UserRepository.Delete(user);
             baseResponse = BaseResponse<bool>.NoContent();
             return baseResponse;
@@ -110,14 +110,14 @@ public class UserServices : IUserServices
         try
         {
             var user = await _UserRepository.GetByEmail(email);
-            // User not found (404)
+            // User не найден (404)
             if (user == null)
             {
                 baseResponse = BaseResponse<User>.NotFound("User not found");
                 return baseResponse;
             }
 
-            // User found (200)
+            // User найден (200)
             baseResponse = BaseResponse<User>.Ok(user);
             return baseResponse;
         }
@@ -130,7 +130,7 @@ public class UserServices : IUserServices
 
     public async Task<IBaseResponse<User>> Edit(string oldEmail, User userModel)
     {
-        // Hashing Password
+        // Хэширование Password
         userModel = _HashingServices.Hashing(userModel);
 
         BaseResponse<User> baseResponse;
@@ -138,20 +138,20 @@ public class UserServices : IUserServices
         {
             var user = await _UserRepository.GetByEmail(oldEmail);
 
-            // User not found (404)
+            // User не найден (404)
             if (user == null)
             {
                 baseResponse = BaseResponse<User>.NotFound("User not found");
                 return baseResponse;
             }
 
-            // User found
+            // User найден
             user.Email = userModel.Email;
             user.Password = userModel.Password;
             user.FirstName = userModel.FirstName;
             user.SecondName = userModel.SecondName;
 
-            // User edit (201)
+            // Изменить User (201)
             await _UserRepository.Update(user);
 
             baseResponse = BaseResponse<User>.Created();

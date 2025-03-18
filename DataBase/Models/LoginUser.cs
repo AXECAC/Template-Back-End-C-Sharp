@@ -1,7 +1,7 @@
 
 namespace DataBase;
 
-// Class LoginUser
+// Класс LoginUser
 public class LoginUser
 {
     public string Email { get; set; }

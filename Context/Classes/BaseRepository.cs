@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Context;
 
-// Class BaseRepository
+// Класс BaseRepository
 public class BaseRepository<T> : IBaseRepository<T> where T : class
 {
     private readonly TemplateDbContext Db;
@@ -12,7 +12,7 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
         Db = db;
     }
 
-    // Create model in db
+    // Создать модель в бд 
     public async Task<bool> Create(T model)
     {
         await Db.Set<T>().AddAsync(model);
@@ -20,13 +20,13 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
         return true;
     }
 
-    // GeUser models from db
+    // Взять модели из бд
     public async Task<List<T>> Select()
     {
         return await Db.Set<T>().ToListAsync();
     }
 
-    // Delete models from db
+    // Удалить модели из бд
     public async Task<bool> Delete(T model)
     {
         Db.Set<T>().Remove(model);
@@ -35,7 +35,7 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
         return true;
     }
 
-    // Update model in db
+    // Обновить модель в бд
     public async Task<T> Update(T model)
     {
         Db.Set<T>().Update(model);

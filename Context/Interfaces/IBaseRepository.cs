@@ -1,17 +1,17 @@
 namespace Context;
 
-// Interface IBaseRepository
+// Интерфейс IBaseRepository
 public interface IBaseRepository<T>
 {
-    // Create model in db
+    // Создать модель в бд
     Task<bool> Create(T model);
 
-    // Get models from db
+    // Получить модели из бд
     Task<List<T>>? Select();
 
-    // Delete models from db
+    // Удалить модель из бд
     Task<bool> Delete(T model);
 
-    // Update model in db
+    // Обновить модель в бд
     Task<T> Update(T model);
 }

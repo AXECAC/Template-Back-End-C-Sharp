@@ -3,7 +3,7 @@ using DataBase;
 
 namespace Context;
 
-// Class UserRepository
+// Класс UserRepository
 public class UserRepository : BaseRepository<User>, IUserRepository
 {
     private readonly TemplateDbContext Db;
@@ -13,13 +13,13 @@ public class UserRepository : BaseRepository<User>, IUserRepository
         Db = db;
     }
 
-    // GeUser user by email
+    // Получить модель User по email
     public async Task<User>? GetByEmail(string email)
     {
         return await Db.Users.FirstOrDefaultAsync(x => x.Email == email);
     }
 
-    // GeUser model from db by id
+    // Получить модель user по id
     public async Task<User>? Get(int id)
     {
         return await Db.Users.FirstOrDefaultAsync(x => x.Id == id);
