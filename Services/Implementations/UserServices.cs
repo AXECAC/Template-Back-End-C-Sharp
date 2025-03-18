@@ -69,7 +69,6 @@ public class UserServices : IUserServices
         userModel = _HashingServices.Hashing(userModel);
         // Создаем User
         await _UserRepository.Create(userModel);
-        // 
         var baseResponse = BaseResponse<bool>.Created("User created");
         return baseResponse;
     }

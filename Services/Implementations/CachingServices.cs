@@ -18,7 +18,7 @@ public class CachingServices<T> : ICachingServices<T> where T : class
         T? model = null;
         // пытаемся получить данные из кэша по value
         string modelString = await Cache.GetStringAsync(value.ToString());
-        //десериализируем из строки в объект
+        // десериализируем из строки в объект
         if (modelString != null)
         {
             model = JsonSerializer.Deserialize<T>(modelString);
@@ -32,7 +32,7 @@ public class CachingServices<T> : ICachingServices<T> where T : class
         T? model = null;
         // пытаемся получить данные из кэша по value
         string modelString = await Cache.GetStringAsync(value.ToString());
-        //десериализируем из строки в объект
+        // десериализируем из строки в объект
         if (modelString != null)
         {
             model = JsonSerializer.Deserialize<T>(modelString);
@@ -47,7 +47,7 @@ public class CachingServices<T> : ICachingServices<T> where T : class
         T? model = null;
         // пытаемся получить данные из кэша по value
         string modelString = await Cache.GetStringAsync(value);
-        //десериализируем из строки в объект
+        // десериализируем из строки в объект
         if (modelString != null)
         {
             model = JsonSerializer.Deserialize<T>(modelString);

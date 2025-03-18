@@ -5,7 +5,7 @@ namespace Extentions;
 // Класс UserExtentions
 public static class UserExtentions
 {
-    // User валидация
+    // Валидация User
     public static bool IsValid(this User user)
     {
         if (user.Id < 0 || !user.Email.IsValidEmail() || !user.Password.IsValidPassword() ||
@@ -16,7 +16,7 @@ public static class UserExtentions
         return true;
     }
 
-    // Login User валидация
+    // Валидация Login User
     public static bool IsValid(this LoginUser form)
     {
         if (!form.Email.IsValidEmail() || !form.Password.IsValidPassword())
@@ -26,7 +26,7 @@ public static class UserExtentions
         return true;
     }
 
-    // Email валидация
+    // Валидация Email
     public static bool IsValidEmail(this string email)
     {
         // Продолжить в будущем
@@ -37,7 +37,7 @@ public static class UserExtentions
         return true;
     }
 
-    // Password валидация
+    // Валидация Password
     public static bool IsValidPassword(this string password)
     {
         // Продолжить в будущем

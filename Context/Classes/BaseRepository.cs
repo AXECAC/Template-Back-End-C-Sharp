@@ -11,7 +11,7 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
         Db = db;
     }
 
-    // Создать модель в бд 
+    // Создать модель в Db 
     public async Task<bool> Create(T model)
     {
         await Db.Set<T>().AddAsync(model);
@@ -19,13 +19,13 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
         return true;
     }
 
-    // Взять модели из бд
+    // Взять модели из Db
     public async Task<List<T>> Select()
     {
         return await Db.Set<T>().ToListAsync();
     }
 
-    // Удалить модели из бд
+    // Удалить модели из Db
     public async Task<bool> Delete(T model)
     {
         Db.Set<T>().Remove(model);
@@ -34,7 +34,7 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
         return true;
     }
 
-    // Обновить модель в бд
+    // Обновить модель в Db
     public async Task<T> Update(T model)
     {
         Db.Set<T>().Update(model);
@@ -43,7 +43,7 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
         return model;
     }
 
-    // Найти модель в бд с помощью выражения
+    // Найти модель в Db с помощью выражения
     public async Task<T>? FirstOrDefaultAsync(Expression<Func<T, bool>> expression)
     {
         return await Db.Set<T>().FirstOrDefaultAsync(expression);

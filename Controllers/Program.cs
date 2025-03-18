@@ -43,7 +43,8 @@ builder.Services.AddSwaggerGen(setup =>
                         { jwtSecurityScheme, Array.Empty<string>() }
                     });
         });
-// Cors для фронта на веб
+
+// Cors для фронта на web
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(
@@ -53,9 +54,17 @@ builder.Services.AddCors(options =>
             .AllowAnyHeader();
         });
 });
+
 // Подключение к redis
-var connectionString = builder.Configuration.GetConnectionString("redis");
 builder.AddRedisClient("redis");
+
+// Прочитать connection string к postgres
+var connectionString = builder.Configuration.GetConnectionString("Postgres");
+
+// Подключиться к БД
+builder.Services.AddDbContext<TemplateDbContext>(options =>
+        options.UseNpgsql(connectionString), ServiceLifetime.Singleton);
+
 // Добавить Аутентификацию
 builder.Services.AddAuthentication(options =>
         {
@@ -76,13 +85,14 @@ builder.Services.AddAuthentication(options =>
                 };
             });
 
-// Add my Middlewares
+// Добавить наши Middlewares
 builder.Services.AddSingleton<ExceptionHandlerMiddleware>();
 
-// Add my Logging
+// Добавить наши Logging
 builder.Services.AddLogging(builder => builder.AddConsole());
+builder.Logging.AddConsole();
 
-// Добавить my Services
+// Добавить наши Services
 builder.Services.AddSingleton<IUserRepository, UserRepository>();
 builder.Services.AddSingleton<IUserServices, UserServices>();
 builder.Services.AddSingleton<ITokenServices, TokenServices>();
@@ -90,16 +100,7 @@ builder.Services.AddSingleton<IHashingServices, HashingServices>();
 builder.Services.AddSingleton<ICachingServices<User>, CachingServices<User>>();
 builder.Services.AddSingleton<IAuthServices, AuthServices>();
 
-// Прочитать connection string к postgres
-connectionString = builder.Configuration.GetConnectionString("Postgres");
 
-
-// Подключиться к бд
-builder.Services.AddDbContext<TemplateDbContext>(options =>
-        options.UseNpgsql(connectionString), ServiceLifetime.Singleton);
-
-
-builder.Logging.AddConsole();
 var app = builder.Build();
 
 //Добавить Swagger
