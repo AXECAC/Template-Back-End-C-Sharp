@@ -35,13 +35,8 @@ namespace Controllers.UserController
                 return Ok(response.Data.ToList());
             }
             // 0 Users найдено
-            if (response.StatusCode == DataBase.StatusCodes.NoContent)
-            {
-                // Вернуть response 200
-                return NoContent();
-            }
-            // Вернуть StatusCode 500
-            return StatusCode(statusCode: 500);
+            // Вернуть response 204
+            return NoContent();
         }
 
         // GetUserById метод
@@ -65,14 +60,10 @@ namespace Controllers.UserController
                 // Вернуть response 200
                 return Ok(response.Data);
             }
+
             // User не найден
-            if (response.StatusCode == DataBase.StatusCodes.NotFound)
-            {
-                // Вернуть response 404
-                return NotFound();
-            }
-            // Вернуть StatusCode 500
-            return StatusCode(statusCode: 500);
+            // Вернуть response 404
+            return NotFound();
         }
 
         // GetUserByEmail метод
@@ -97,13 +88,8 @@ namespace Controllers.UserController
                 return Ok(response.Data);
             }
             // User не найден
-            if (response.StatusCode == DataBase.StatusCodes.NotFound)
-            {
-                // Вернуть response 404
-                return NotFound();
-            }
-            // Вернуть StatusCode 500
-            return StatusCode(statusCode: 500);
+            // Вернуть response 404
+            return NotFound();
         }
 
         // Create метод
@@ -182,13 +168,8 @@ namespace Controllers.UserController
                 return NoContent();
             }
             // User не найден
-            if (response.StatusCode == DataBase.StatusCodes.NotFound)
-            {
-                // Вернуть response 404
-                return NotFound();
-            }
-            // Вернуть StatusCode 500
-            return StatusCode(statusCode: 500);
+            // Вернуть response 404
+            return NotFound();
         }
     }
 }

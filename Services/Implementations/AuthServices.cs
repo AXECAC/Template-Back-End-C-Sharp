@@ -26,7 +26,7 @@ public class AuthServices : IAuthServices
         try
         {
             //Найти User по email
-            var userDb = await _UserRepository.GetByEmail(user.Email);
+            var userDb = await _UserRepository.FirstOrDefaultAsync(x => x.Email == user.Email);
 
             // Новый User
             if (userDb == null)
@@ -61,7 +61,7 @@ public class AuthServices : IAuthServices
         try
         {
             // Найти user по email
-            var userDb = await _UserRepository.GetByEmail(user.Email);
+            var userDb = await _UserRepository.FirstOrDefaultAsync(x => x.Email == user.Email);
 
             // User существует
             if (userDb != null)

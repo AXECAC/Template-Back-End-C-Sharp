@@ -1,12 +1,11 @@
+using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
-
 namespace Context;
 
 // Класс BaseRepository
 public class BaseRepository<T> : IBaseRepository<T> where T : class
 {
     private readonly TemplateDbContext Db;
-
     public BaseRepository(TemplateDbContext db)
     {
         Db = db;
@@ -43,4 +42,23 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
 
         return model;
     }
+
+    // Find model in db with expression
+    public async Task<T>? FirstOrDefaultAsync(Expression<Func<T, bool>> expression)
+    {
+        return await Db.Set<T>().FirstOrDefaultAsync(expression);
+    }
+
+    // Get IQueryable
+    public IQueryable<T> GetQueryable()
+    {
+        return Db.Set<T>();
+    }
+
+    // Get IQueryable where used expression
+    public IQueryable<T> Where(Expression<Func<T, bool>> expression)
+    {
+        return Db.Set<T>().Where(expression);
+    }
+
 }

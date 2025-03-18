@@ -8,11 +8,11 @@ public interface IUserServices
 
     Task<IBaseResponse<User>> GetUser(int id);
 
-    Task<IBaseResponse<User>> CreateUser(User userModel);
+    Task<IBaseResponse<bool>> CreateUser(User userModel);
 
     Task<IBaseResponse<bool>> DeleteUser(int id);
 
     Task<IBaseResponse<User>> GetUserByEmail(string email);
 
-    Task<IBaseResponse<User>> Edit(string oldEmail, User userModel);
+    Task<IBaseResponse<bool>> Edit(string oldEmail, User userModel);
 }

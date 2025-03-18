@@ -4,6 +4,9 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
 using Services;
+using Services.Caching;
+using DataBase;
+using Middlewares;
 using Context;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -50,7 +53,9 @@ builder.Services.AddCors(options =>
             .AllowAnyHeader();
         });
 });
-
+// Подключение к redis
+var connectionString = builder.Configuration.GetConnectionString("redis");
+builder.AddRedisClient("redis");
 // Добавить Аутентификацию
 builder.Services.AddAuthentication(options =>
         {
@@ -71,21 +76,30 @@ builder.Services.AddAuthentication(options =>
                 };
             });
 
+// Add my Middlewares
+builder.Services.AddSingleton<ExceptionHandlerMiddleware>();
+
+// Add my Logging
+builder.Services.AddLogging(builder => builder.AddConsole());
+
 // Добавить my Services
 builder.Services.AddSingleton<IUserRepository, UserRepository>();
 builder.Services.AddSingleton<IUserServices, UserServices>();
 builder.Services.AddSingleton<ITokenServices, TokenServices>();
 builder.Services.AddSingleton<IHashingServices, HashingServices>();
+builder.Services.AddSingleton<ICachingServices<User>, CachingServices<User>>();
 builder.Services.AddSingleton<IAuthServices, AuthServices>();
 
 // Прочитать connection string к postgres
-var connectionString = builder.Configuration.GetConnectionString("Postgres");
+connectionString = builder.Configuration.GetConnectionString("Postgres");
 
 
 // Подключиться к бд
 builder.Services.AddDbContext<TemplateDbContext>(options =>
         options.UseNpgsql(connectionString), ServiceLifetime.Singleton);
 
+
+builder.Logging.AddConsole();
 var app = builder.Build();
 
 //Добавить Swagger
@@ -96,6 +110,7 @@ app.UseSwaggerUI();
 // {
 // }
 
+app.UseMiddleware<ExceptionHandlerMiddleware>();
 // Cors
 app.UseCors();
 
