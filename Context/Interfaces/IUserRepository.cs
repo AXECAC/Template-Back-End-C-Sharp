@@ -2,7 +2,7 @@ using DataBase;
 
 namespace Context;
 
-// Interface IUserRepository
+// Интерфейс IUserRepository
 public interface IUserRepository : IBaseRepository<User>
 {
 }

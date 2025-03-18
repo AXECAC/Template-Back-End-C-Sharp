@@ -43,19 +43,19 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
         return model;
     }
 
-    // Find model in db with expression
+    // Найти модель в бд с помощью выражения
     public async Task<T>? FirstOrDefaultAsync(Expression<Func<T, bool>> expression)
     {
         return await Db.Set<T>().FirstOrDefaultAsync(expression);
     }
 
-    // Get IQueryable
+    // Получить IQueryable
     public IQueryable<T> GetQueryable()
     {
         return Db.Set<T>();
     }
 
-    // Get IQueryable where used expression
+    // Получить IQueryable где используется выражение
     public IQueryable<T> Where(Expression<Func<T, bool>> expression)
     {
         return Db.Set<T>().Where(expression);

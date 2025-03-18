@@ -65,7 +65,7 @@ namespace Controllers.AuthController
         // Метод Login
         public async Task<IActionResult> Login(LoginUser form)
         {
-            // Secret key empty
+            // Secret key пуст
             if (_secretKey == "")
             {
                 // Вернуть StatusCode 500

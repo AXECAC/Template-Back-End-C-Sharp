@@ -1,18 +1,18 @@
 namespace Services.Caching;
 
-// Interface ICachingServices
+// Интерфейс ICachingServices
 public interface ICachingServices<T>
 {
-    // GetAsync(int) from cache
+    // GetAsync(int) из кэша
     Task<T> GetAsync(int value);
-    // GetAsyn(double)c from cache 
+    // GetAsync(double) из кэша 
     Task<T> GetAsync(double value);
-    // GetAsync(string) from cache
+    // GetAsync(string) из кэша
     Task<T> GetAsync(string value);
 
-    // SetAsync value with key to cache
+    // SetAsync значением key в кэш
     void SetAsync(T value, string key);
 
-    // RemoveAsync value by key from cache
+    // RemoveAsync значением по key из кэша
     void RemoveAsync(string key);
 }

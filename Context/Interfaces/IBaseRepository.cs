@@ -16,12 +16,12 @@ public interface IBaseRepository<T>
     // Обновить модель в бд
     Task<T> Update(T model);
 
-    // Find model in db with expression
+    // Найти модель в бд с помощью выражения
     Task<T>? FirstOrDefaultAsync(Expression<Func<T, bool>> expression);
 
-    // Get IQueryable
+    // Получить IQueryable
     IQueryable<T> GetQueryable();
 
-    // Get IQueryable where used expression
+    // Получить IQueryable где используется выражение
     IQueryable<T> Where(Expression<Func<T, bool>> expression);
 }
