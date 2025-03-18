@@ -11,39 +11,39 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
         Db = db;
     }
 
-    // Создать модель в Db 
-    public async Task<bool> Create(T model)
+    // Создать сущность в Db 
+    public async Task<bool> Create(T entity)
     {
-        await Db.Set<T>().AddAsync(model);
+        await Db.Set<T>().AddAsync(entity);
         await Db.SaveChangesAsync();
         return true;
     }
 
-    // Взять модели из Db
+    // Взять сущности из Db
     public async Task<List<T>> Select()
     {
         return await Db.Set<T>().ToListAsync();
     }
 
-    // Удалить модели из Db
-    public async Task<bool> Delete(T model)
+    // Удалить сущности из Db
+    public async Task<bool> Delete(T entity)
     {
-        Db.Set<T>().Remove(model);
+        Db.Set<T>().Remove(entity);
         await Db.SaveChangesAsync();
 
         return true;
     }
 
-    // Обновить модель в Db
-    public async Task<T> Update(T model)
+    // Обновить сущность в Db
+    public async Task<T> Update(T entity)
     {
-        Db.Set<T>().Update(model);
+        Db.Set<T>().Update(entity);
         await Db.SaveChangesAsync();
 
-        return model;
+        return entity;
     }
 
-    // Найти модель в Db с помощью выражения
+    // Найти сущность в Db с помощью выражения
     public async Task<T>? FirstOrDefaultAsync(Expression<Func<T, bool>> expression)
     {
         return await Db.Set<T>().FirstOrDefaultAsync(expression);

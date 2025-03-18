@@ -12,47 +12,47 @@ public class CachingServices<T> : ICachingServices<T> where T : class
         Cache = cache;
     }
 
-    // Получаем model по (int) из кэша
+    // Получаем entity по (int) из кэша
     public async Task<T> GetAsync(int value)
     {
-        T? model = null;
+        T? entity = null;
         // пытаемся получить данные из кэша по value
-        string modelString = await Cache.GetStringAsync(value.ToString());
+        string entityString = await Cache.GetStringAsync(value.ToString());
         // десериализируем из строки в объект
-        if (modelString != null)
+        if (entityString != null)
         {
-            model = JsonSerializer.Deserialize<T>(modelString);
+            entity = JsonSerializer.Deserialize<T>(entityString);
         }
-        return model;
+        return entity;
     }
 
-    // Получаем model по (double) из кэша
+    // Получаем entity по (double) из кэша
     public async Task<T> GetAsync(double value)
     {
-        T? model = null;
+        T? entity = null;
         // пытаемся получить данные из кэша по value
-        string modelString = await Cache.GetStringAsync(value.ToString());
+        string entityString = await Cache.GetStringAsync(value.ToString());
         // десериализируем из строки в объект
-        if (modelString != null)
+        if (entityString != null)
         {
-            model = JsonSerializer.Deserialize<T>(modelString);
+            entity = JsonSerializer.Deserialize<T>(entityString);
         }
-        return model;
+        return entity;
 
     }
 
-    // Получаем model по (string) из кэша
+    // Получаем entity по (string) из кэша
     public async Task<T> GetAsync(string value)
     {
-        T? model = null;
+        T? entity = null;
         // пытаемся получить данные из кэша по value
-        string modelString = await Cache.GetStringAsync(value);
+        string entityString = await Cache.GetStringAsync(value);
         // десериализируем из строки в объект
-        if (modelString != null)
+        if (entityString != null)
         {
-            model = JsonSerializer.Deserialize<T>(modelString);
+            entity = JsonSerializer.Deserialize<T>(entityString);
         }
-        return model;
+        return entity;
 
     }
 
@@ -60,9 +60,9 @@ public class CachingServices<T> : ICachingServices<T> where T : class
     public async void SetAsync(T value, string key)
     {
         // сериализуем данные в строку в формате json
-        string modelString = JsonSerializer.Serialize<T>(value);
+        string entityString = JsonSerializer.Serialize<T>(value);
         // сохраняем строковое представление объекта в формате json в кэш на 2 минуты
-        await Cache.SetStringAsync(key, modelString, new DistributedCacheEntryOptions
+        await Cache.SetStringAsync(key, entityString, new DistributedCacheEntryOptions
         {
             AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(2)
         });

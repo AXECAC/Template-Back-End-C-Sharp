@@ -4,19 +4,19 @@ namespace Context;
 // Интерфейс IBaseRepository
 public interface IBaseRepository<T>
 {
-    // Создать модель в бд
-    Task<bool> Create(T model);
+    // Создать сущность в Db
+    Task<bool> Create(T entity);
 
-    // Получить модели из бд
+    // Получить сущности из Db
     Task<List<T>>? Select();
 
-    // Удалить модель из бд
-    Task<bool> Delete(T model);
+    // Удалить сущность из Db
+    Task<bool> Delete(T entity);
 
-    // Обновить модель в бд
-    Task<T> Update(T model);
+    // Обновить сущность в Db
+    Task<T> Update(T entity);
 
-    // Найти модель в бд с помощью выражения
+    // Найти сущность в Db с помощью выражения
     Task<T>? FirstOrDefaultAsync(Expression<Func<T, bool>> expression);
 
     // Получить IQueryable

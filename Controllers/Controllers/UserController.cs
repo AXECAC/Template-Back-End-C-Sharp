@@ -97,25 +97,25 @@ namespace Controllers.UserController
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status201Created)]
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status409Conflict)]
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status422UnprocessableEntity)]
-        public async Task<IActionResult> Create(User userModel)
+        public async Task<IActionResult> Create(User userEntity)
         {
             // User not Valid (Плохой ввод)
-            if (!userModel.IsValid())
+            if (!userEntity.IsValid())
             {
                 // Вернуть StatusCode 422
                 return UnprocessableEntity();
             }
             // Проверить существование "new email"
-            var response = await _UserServices.GetUserByEmail(userModel.Email);
+            var response = await _UserServices.GetUserByEmail(userEntity.Email);
             // Conflict: Этот email уже существует
             if (response.StatusCode == DataBase.StatusCodes.Ok)
             {
                 return Conflict();
             }
             // Создать User
-            await _UserServices.CreateUser(userModel);
+            await _UserServices.CreateUser(userEntity);
             // Вернуть response 201
-            return CreatedAtAction(nameof(userModel), new { message = "Successed" });
+            return CreatedAtAction(nameof(userEntity), new { message = "Successed" });
         }
 
         // Edit метод
@@ -123,10 +123,10 @@ namespace Controllers.UserController
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status201Created)]
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound)]
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status422UnprocessableEntity)]
-        public async Task<IActionResult> Edit(User userModel, string oldEmail)
+        public async Task<IActionResult> Edit(User userEntity, string oldEmail)
         {
             // User not Valid (Плохой ввод)
-            if (!userModel.IsValid() || !oldEmail.IsValidEmail())
+            if (!userEntity.IsValid() || !oldEmail.IsValidEmail())
             {
                 // Вернуть StatusCode 422
                 return UnprocessableEntity();
@@ -141,9 +141,9 @@ namespace Controllers.UserController
             }
 
             // Изменить User
-            await _UserServices.Edit(oldEmail, userModel);
+            await _UserServices.Edit(oldEmail, userEntity);
             // Вернуть response 201
-            return CreatedAtAction(nameof(userModel), new { message = "Successed" });
+            return CreatedAtAction(nameof(userEntity), new { message = "Successed" });
         }
 
         // Delete метод

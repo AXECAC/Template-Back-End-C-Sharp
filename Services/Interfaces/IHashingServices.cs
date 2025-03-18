@@ -4,6 +4,6 @@ namespace Services;
 // Интерфейс IHashingServices
 public interface IHashingServices
 {
-    User Hashing(User userModel);
-    User Hashing(LoginUser userModel);
+    User Hashing(User userEntity);
+    User Hashing(LoginUser userEntity);
 }
