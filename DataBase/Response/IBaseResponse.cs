@@ -7,3 +7,10 @@ public interface IBaseResponse<T>
     StatusCodes StatusCode { get; }
     T Data { get; }
 }
+
+// Интерфейс IBaseResponse без data
+public interface IBaseResponse
+{
+    string Description { get; }
+    StatusCodes StatusCode { get; }
+}
