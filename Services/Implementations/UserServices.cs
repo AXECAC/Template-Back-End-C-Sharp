@@ -92,8 +92,9 @@ public class UserServices : IUserServices
 
         // Ищем User в кэше по Email
         var userInCache = await _CachingServices.GetAsync(user.Email);
+
         // User есть в кэше
-        if (user != null)
+        if (userInCache != null)
         {
             // Удаляем User из кеша по Email
 
