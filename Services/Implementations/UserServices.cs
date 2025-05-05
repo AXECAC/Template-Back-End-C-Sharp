@@ -63,19 +63,19 @@ public class UserServices : IUserServices
         return baseResponse;
     }
 
-    public async Task<IBaseResponse<bool>> CreateUser(User userEntity)
+    public async Task<IBaseResponse> CreateUser(User userEntity)
     {
         // Хэширование Password
         userEntity = _HashingServices.Hashing(userEntity);
         // Создаем User
         await _UserRepository.Create(userEntity);
-        var baseResponse = BaseResponse<bool>.Created("User created");
+        var baseResponse = BaseResponse.Created("User created");
         return baseResponse;
     }
 
-    public async Task<IBaseResponse<bool>> DeleteUser(int id)
+    public async Task<IBaseResponse> DeleteUser(int id)
     {
-        BaseResponse<bool> baseResponse;
+        BaseResponse baseResponse;
 
         // Ищем User в кэше по Id
 
@@ -104,12 +104,12 @@ public class UserServices : IUserServices
         // User не найден (404)
         if (user == null)
         {
-            baseResponse = BaseResponse<bool>.NotFound("User not found");
+            baseResponse = BaseResponse.NotFound("User not found");
             return baseResponse;
         }
         // User Найден (204)
         await _UserRepository.Delete(user);
-        baseResponse = BaseResponse<bool>.NoContent();
+        baseResponse = BaseResponse.NoContent();
         return baseResponse;
     }
 
@@ -138,12 +138,12 @@ public class UserServices : IUserServices
         return baseResponse;
     }
 
-    public async Task<IBaseResponse<bool>> Edit(string oldEmail, User userEntity)
+    public async Task<IBaseResponse> Edit(string oldEmail, User userEntity)
     {
         // Хэширование Password
         userEntity = _HashingServices.Hashing(userEntity);
 
-        BaseResponse<bool> baseResponse;
+        BaseResponse baseResponse;
         // Ищем User в кэше по Id
         User? user = await _CachingServices.GetAsync(userEntity.Id);
 
@@ -166,7 +166,7 @@ public class UserServices : IUserServices
         // User not found (404)
         if (user == null)
         {
-            baseResponse = BaseResponse<bool>.NotFound("User not found");
+            baseResponse = BaseResponse.NotFound("User not found");
             return baseResponse;
         }
 
@@ -182,7 +182,7 @@ public class UserServices : IUserServices
         // Добавляем измененного User
         _CachingServices.SetAsync(user, user.Id.ToString());
 
-        baseResponse = BaseResponse<bool>.Created();
+        baseResponse = BaseResponse.Created();
         return baseResponse;
     }
 }
