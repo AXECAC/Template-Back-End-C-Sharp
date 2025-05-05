@@ -1,4 +1,4 @@
-namespace DataBase;
+namespace Services;
 
 // Класс LoginUser
 public class LoginUser
