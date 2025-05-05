@@ -23,33 +23,24 @@ public class AuthServices : IAuthServices
         user = _HashingServices.Hashing(user);
 
         BaseResponse<string> baseResponse;
-        try
-        {
-            //Найти User по email
-            var userDb = await _UserRepository.FirstOrDefaultAsync(x => x.Email == user.Email);
+        //Найти User по email
+        var userDb = await _UserRepository.FirstOrDefaultAsync(x => x.Email == user.Email);
 
-            // Новый User
-            if (userDb == null)
-            {
-                // Создать новый User
-                await _UserRepository.Create(user);
-                // Created (201)
-                baseResponse = BaseResponse<string>.Created(data: _TokenServices.GenereteJWTToken(user, secretKey));
-            }
-            // Этот email уже существует
-            else
-            {
-                // Conflict (409)
-                baseResponse = BaseResponse<string>.Conflict("This email already exists");
-            }
-            return baseResponse;
-        }
-        catch (Exception ex)
+        // Новый User
+        if (userDb == null)
         {
-            // Server error (500)
-            return BaseResponse<string>.InternalServerError($"{TryRegister} : {ex.Message}");
+            // Создать новый User
+            await _UserRepository.Create(user);
+            // Created (201)
+            baseResponse = BaseResponse<string>.Created(data: _TokenServices.GenereteJWTToken(user, secretKey));
         }
-
+        // Этот email уже существует
+        else
+        {
+            // Conflict (409)
+            baseResponse = BaseResponse<string>.Conflict("This email already exists");
+        }
+        return baseResponse;
     }
 
     public async Task<IBaseResponse<string>> TryLogin(LoginUser form, string secretKey)
@@ -58,39 +49,30 @@ public class AuthServices : IAuthServices
         User user = _HashingServices.Hashing(form);
 
         BaseResponse<string> baseResponse;
-        try
-        {
-            // Найти user по email
-            var userDb = await _UserRepository.FirstOrDefaultAsync(x => x.Email == user.Email);
+        // Найти user по email
+        var userDb = await _UserRepository.FirstOrDefaultAsync(x => x.Email == user.Email);
 
-            // User существует
-            if (userDb != null)
+        // User существует
+        if (userDb != null)
+        {
+            // Сравнить хэш пароля
+            if (user.Password == userDb.Password)
             {
-                // Сравнить хэш пароля
-                if (user.Password == userDb.Password)
-                {
-                    // Ok (200)
-                    baseResponse = BaseResponse<string>.Ok(data: _TokenServices.GenereteJWTToken(user, secretKey));
-                }
-                else
-                {
-                    // Unauthorized (401)
-                    baseResponse = BaseResponse<string>.Unauthorized("Bad password");
-                }
+                // Ok (200)
+                baseResponse = BaseResponse<string>.Ok(data: _TokenServices.GenereteJWTToken(user, secretKey));
             }
-            // User не существует
             else
             {
                 // Unauthorized (401)
-                baseResponse = BaseResponse<string>.Unauthorized("Email not found");
+                baseResponse = BaseResponse<string>.Unauthorized("Bad password");
             }
-            return baseResponse;
         }
-        catch (Exception ex)
+        // User не существует
+        else
         {
-            // Server error (500)
-            return BaseResponse<string>.InternalServerError($"{TryLogin} : {ex.Message}");
+            // Unauthorized (401)
+            baseResponse = BaseResponse<string>.Unauthorized("Email not found");
         }
-
+        return baseResponse;
     }
 }
