@@ -30,6 +30,7 @@ public class AuthServices : IAuthServices
         if (userDb == null)
         {
             // Создать новый User
+            user.Id = 0;
             await _UserRepository.Create(user);
             // Created (201)
             baseResponse = BaseResponse<string>.Created(data: _TokenServices.GenereteJWTToken(user, secretKey));
