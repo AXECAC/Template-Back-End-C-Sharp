@@ -68,6 +68,7 @@ public class UserServices : IUserServices
         // Хэширование Password
         userEntity = _HashingServices.Hashing(userEntity);
         // Создаем User
+        userEntity.Id = 0;
         await _UserRepository.Create(userEntity);
         var baseResponse = BaseResponse.Created("User created");
         return baseResponse;

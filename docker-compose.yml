@@ -1,0 +1,55 @@
+services:
+  api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_HTTP_PORTS=8080
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+      - redis
+
+  db:
+    container_name: postgresTemplate
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: aragami
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: templatedb
+    ports:
+      - "5431:5432"
+    volumes:
+      - postgres_data:/data/postgres
+
+  pgadmin:
+    container_name: pgadmin4Template
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: pgadmin
+    ports:
+      - "80:80"
+    volumes:
+       - pgadmin:/var/lib/pgadmin
+  
+  redis:
+    image: docker.io/bitnami/redis:7.4
+    environment:
+      # ALLOW_EMPTY_PASSWORD is recommended only for development.
+      - ALLOW_EMPTY_PASSWORD=yes
+      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+    ports:
+      - '6379:6379'
+    volumes:
+      - 'redis_data:/bitnami/redis/data'
+
+volumes:
+  redis_data:
+    driver: local
+  pgadmin:
+  postgres_data:
