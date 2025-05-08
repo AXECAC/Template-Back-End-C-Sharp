@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
+using DotNetEnv;
 using Services;
 using Services.Caching;
 using DataBase;
@@ -55,11 +56,21 @@ builder.Services.AddCors(options =>
         });
 });
 
+DotNetEnv.Env.Load();
+
+
+var host = Environment.GetEnvironmentVariable("POSTGRES_HOST");
+var port = Environment.GetEnvironmentVariable("POSTGRES_PORT");
+var db = Environment.GetEnvironmentVariable("POSTGRES_DB");
+var user = Environment.GetEnvironmentVariable("POSTGRES_USER");
+var pass = Environment.GetEnvironmentVariable("POSTGRES_PASSWORD");
+
 // Подключение к redis
 builder.AddRedisClient("redis");
 
 // Прочитать connection string к postgres
-var connectionString = builder.Configuration.GetConnectionString("Postgres");
+var connectionString = $"Host={host};Port={port};Database={db};Username={user};Password={pass}";
+// var connectionString = builder.Configuration.GetConnectionString("Postgres");
 
 // Подключиться к БД
 builder.Services.AddDbContext<TemplateDbContext>(options =>
