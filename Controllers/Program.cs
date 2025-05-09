@@ -67,7 +67,7 @@ var envVars = new Dictionary<string, string?>
     ["Postgres:Password"] = Environment.GetEnvironmentVariable("POSTGRES_PASSWORD"),
     ["Redis:Host"] = Environment.GetEnvironmentVariable("REDIS_HOST"),
     ["Redis:Port"] = Environment.GetEnvironmentVariable("REDIS_PORT"),
-    ["Secret"] = Environment.GetEnvironmentVariable("SECRET_KEY")
+    ["ApiSettings:Secret"] = Environment.GetEnvironmentVariable("SECRET_KEY")
 };
 
 builder.Configuration.AddInMemoryCollection(envVars!);
@@ -108,7 +108,7 @@ builder.Services.AddAuthentication(options =>
                     ValidateIssuerSigningKey = true,
                     ValidIssuer = "yourdomain.com",
                     ValidAudience = "yourdomain.com",
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Secret"]))
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["ApiSettings:Secret"]))
                 };
             });
 
