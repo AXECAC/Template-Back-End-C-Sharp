@@ -58,18 +58,34 @@ builder.Services.AddCors(options =>
 
 DotNetEnv.Env.Load();
 
+var envVars = new Dictionary<string, string?>
+{
+    ["Postgres:Host"] = Environment.GetEnvironmentVariable("POSTGRES_HOST"),
+    ["Postgres:Port"] = Environment.GetEnvironmentVariable("POSTGRES_PORT"),
+    ["Postgres:Database"] = Environment.GetEnvironmentVariable("POSTGRES_DB"),
+    ["Postgres:Username"] = Environment.GetEnvironmentVariable("POSTGRES_USER"),
+    ["Postgres:Password"] = Environment.GetEnvironmentVariable("POSTGRES_PASSWORD"),
+    ["Redis:Host"] = Environment.GetEnvironmentVariable("REDIS_HOST"),
+    ["Redis:Port"] = Environment.GetEnvironmentVariable("REDIS_PORT"),
+    ["Secret"] = Environment.GetEnvironmentVariable("SECRET_KEY")
+};
 
-var host = Environment.GetEnvironmentVariable("POSTGRES_HOST");
-var port = Environment.GetEnvironmentVariable("POSTGRES_PORT");
-var db = Environment.GetEnvironmentVariable("POSTGRES_DB");
-var user = Environment.GetEnvironmentVariable("POSTGRES_USER");
-var pass = Environment.GetEnvironmentVariable("POSTGRES_PASSWORD");
+builder.Configuration.AddInMemoryCollection(envVars!);
+
+var redisHost = builder.Configuration["Redis:Host"];
+var redisPort = builder.Configuration["Redis:Port"];
+var redisConnectionString = $"{redisHost}:{redisPort}";
 
 // Подключение к redis
-builder.AddRedisClient("redis");
+builder.AddRedisClient(redisConnectionString);
 
 // Прочитать connection string к postgres
-var connectionString = $"Host={host};Port={port};Database={db};Username={user};Password={pass}";
+var connectionString = $"Host={builder.Configuration["Postgres:Host"]};" +
+                       $"Port={builder.Configuration["Postgres:Port"]};" +
+                       $"Database={builder.Configuration["Postgres:Database"]};" +
+                       $"Username={builder.Configuration["Postgres:Username"]};" +
+                       $"Password={builder.Configuration["Postgres:Password"]}";
+
 // var connectionString = builder.Configuration.GetConnectionString("Postgres");
 
 // Подключиться к БД
@@ -92,7 +108,7 @@ builder.Services.AddAuthentication(options =>
                     ValidateIssuerSigningKey = true,
                     ValidIssuer = "yourdomain.com",
                     ValidAudience = "yourdomain.com",
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["ApiSettings:Secret"]))
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Secret"]))
                 };
             });
 

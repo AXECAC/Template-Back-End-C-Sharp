@@ -4,19 +4,19 @@ services:
     image: postgres
     restart: always
     environment:
-      POSTGRES_USER: aragami
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: templatedb
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     expose:
-      - "5431"
+      - "${POSTGRES_PORT}"
     ports:
-      - "5431:5431"
+      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
     networks:
       custom_network:
         ipv4_address: 10.100.0.2  # Static IP address for the db service
     volumes:
       - postgres_data:/data/postgres
-    command: -p 5431
+    command: -p ${POSTGRES_PORT}
 
   pgadmin:
     container_name: pgadmin4Template
@@ -39,7 +39,7 @@ services:
       - ALLOW_EMPTY_PASSWORD=yes
       - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
     ports:
-      - '6379:6379'
+      - "${REDIS_PORT}:${REDIS_PORT}"
     volumes:
       - 'redis_data:/bitnami/redis/data'
     networks:
