@@ -1,20 +1,49 @@
 # Template-Back-End-C-Sharp
 
-## How build + run
+## Development
 
-- Up postgres
-```bash
-cd DataBase/Docker
+### Build and run API
+
+```sh
+dotnet build Controllers/Controllers.csproj
+dotnet run --project Controllers/Controllers.csproj
 ```
 
-And use docker [Readme.md](https://github.com/AXECAC/Template-Back-End-C-Sharp/blob/master/DataBase/Docker/Readme.md) to up, start postgres and use backup
+### Deploy DBs
 
-- Go back to build and run project
-```bash
-# Go to run dir
-cd ../../Controllers
-# Build project
-dotnet build
-# Run project
-dotnet run
+```sh
+docker-compose -f DataBase/Docker/docker-compose.yml --env-file Controllers/.env up --no-start
+docker start pgadmin4Template postgresTemplate docker-redis-1
 ```
+
+### Stop DBs
+
+```sh
+docker stop pgadmin4Template postgresTemplate docker-redis-1
+```
+
+---
+
+## Production deploy
+
+```sh
+docker-compose up --build
+```
+
+---
+
+
+## Backup db
+
+<!-- TODO: Проверить, правильно ли подтягиваются переменные окружения -->
+
+```sh
+sudo docker exec postgresTemplate pg_dump -U $POSTGRES_USER -d $POSTGRES_DB > backup.sql
+```
+
+## Restore db
+
+```sh
+sudo docker exec -i postgresTemplate psql -U $POSTGRES_USER -d $POSTGRES_DB < backup.sql
+```
+
