@@ -33,7 +33,7 @@ public class AuthServices : IAuthServices
             user.Id = 0;
             await _UserRepository.Create(user);
             // Created (201)
-            baseResponse = BaseResponse<string>.Created(data: _TokenServices.GenereteJWTToken(user, secretKey));
+            baseResponse = BaseResponse<string>.Created(data: _TokenServices.GenerateJWTTocken(user, secretKey));
         }
         // Этот email уже существует
         else
@@ -60,7 +60,7 @@ public class AuthServices : IAuthServices
             if (user.Password == userDb.Password)
             {
                 // Ok (200)
-                baseResponse = BaseResponse<string>.Ok(data: _TokenServices.GenereteJWTToken(user, secretKey));
+                baseResponse = BaseResponse<string>.Ok(data: _TokenServices.GenerateJWTTocken(user, secretKey));
             }
             else
             {
