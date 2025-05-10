@@ -17,12 +17,12 @@ public class AuthServices : IAuthServices
         _TokenServices = tokenServices;
     }
 
-    public async Task<IBaseResponse<string>> TryRegister(User user, string secretKey)
+    public async Task<IBaseResponse<Tokens>> TryRegister(User user, string secretKey)
     {
         // Хэширование Password
         user = _HashingServices.Hashing(user);
 
-        BaseResponse<string> baseResponse;
+        BaseResponse<Tokens> baseResponse;
         //Найти User по email
         var userDb = await _UserRepository.FirstOrDefaultAsync(x => x.Email == user.Email);
 
@@ -33,23 +33,23 @@ public class AuthServices : IAuthServices
             user.Id = 0;
             await _UserRepository.Create(user);
             // Created (201)
-            baseResponse = BaseResponse<string>.Created(data: _TokenServices.GenerateJWTTocken(user, secretKey));
+            baseResponse = BaseResponse<Tokens>.Created(data: _TokenServices.GenerateJWTToken(user, secretKey));
         }
         // Этот email уже существует
         else
         {
             // Conflict (409)
-            baseResponse = BaseResponse<string>.Conflict("This email already exists");
+            baseResponse = BaseResponse<Tokens>.Conflict("This email already exists");
         }
         return baseResponse;
     }
 
-    public async Task<IBaseResponse<string>> TryLogin(LoginUser form, string secretKey)
+    public async Task<IBaseResponse<Tokens>> TryLogin(LoginUser form, string secretKey)
     {
         // Хэширование Password
         User user = _HashingServices.Hashing(form);
 
-        BaseResponse<string> baseResponse;
+        BaseResponse<Tokens> baseResponse;
         // Найти user по email
         var userDb = await _UserRepository.FirstOrDefaultAsync(x => x.Email == user.Email);
 
@@ -60,19 +60,19 @@ public class AuthServices : IAuthServices
             if (user.Password == userDb.Password)
             {
                 // Ok (200)
-                baseResponse = BaseResponse<string>.Ok(data: _TokenServices.GenerateJWTTocken(user, secretKey));
+                baseResponse = BaseResponse<Tokens>.Ok(data: _TokenServices.GenerateJWTToken(user, secretKey));
             }
             else
             {
                 // Unauthorized (401)
-                baseResponse = BaseResponse<string>.Unauthorized("Bad password");
+                baseResponse = BaseResponse<Tokens>.Unauthorized("Bad password");
             }
         }
         // User не существует
         else
         {
             // Unauthorized (401)
-            baseResponse = BaseResponse<string>.Unauthorized("Email not found");
+            baseResponse = BaseResponse<Tokens>.Unauthorized("Email not found");
         }
         return baseResponse;
     }
