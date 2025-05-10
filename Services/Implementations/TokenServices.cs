@@ -8,7 +8,29 @@ namespace Services;
 // Класс TokenServices
 public class TokenServices : ITokenServices
 {
-    public string GenerateJWTTocken(User user, string secretKey)
+    public Tokens GenerateJWTToken(User user, string secretKey)
+    {
+        Tokens jwtToken = new Tokens();
+        string accessToken = GenerateAccessToken(user, secretKey);
+        string refreshToken = GenerateRefreshToken(user, secretKey);
+        jwtToken.AccessToken = accessToken;
+        jwtToken.RefreshToken = refreshToken;
+        return jwtToken;
+    }
+
+    private string GenerateAccessToken(User user, string secretKey)
+    {
+        var token = GenerateToken(user, secretKey);
+        return new JwtSecurityTokenHandler().WriteToken(token);
+    }
+
+    private string GenerateRefreshToken(User user, string secretKey)
+    {
+        var token = GenerateToken(user, secretKey + DateTime.Now.ToString());
+        return new JwtSecurityTokenHandler().WriteToken(token);
+    }
+
+    private JwtSecurityToken GenerateToken(User user, string secretKey)
     {
         var claims = GenerateClaims(user);
 
@@ -21,7 +43,8 @@ public class TokenServices : ITokenServices
                 claims: claims,
                 expires: DateTime.Now.AddMinutes(5),
                 signingCredentials: creds);
-        return new JwtSecurityTokenHandler().WriteToken(token);
+
+        return token;
     }
 
     private Claim[] GenerateClaims(User user)

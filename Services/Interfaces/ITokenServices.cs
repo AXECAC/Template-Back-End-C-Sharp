@@ -4,5 +4,5 @@ namespace Services;
 // Интерфейс ITokenServices
 public interface ITokenServices
 {
-    public string GenerateJWTTocken(User user, string secretKey);
+    public Tokens GenerateJWTToken(User user, string secretKey);
 }
