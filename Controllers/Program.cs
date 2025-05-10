@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
+using DotNetEnv;
 using Services;
 using Services.Caching;
 using DataBase;
@@ -55,11 +56,37 @@ builder.Services.AddCors(options =>
         });
 });
 
+DotNetEnv.Env.Load();
+
+var envVars = new Dictionary<string, string?>
+{
+    ["Postgres:Host"] = Environment.GetEnvironmentVariable("POSTGRES_HOST"),
+    ["Postgres:Port"] = Environment.GetEnvironmentVariable("POSTGRES_PORT"),
+    ["Postgres:Database"] = Environment.GetEnvironmentVariable("POSTGRES_DB"),
+    ["Postgres:Username"] = Environment.GetEnvironmentVariable("POSTGRES_USER"),
+    ["Postgres:Password"] = Environment.GetEnvironmentVariable("POSTGRES_PASSWORD"),
+    ["Redis:Host"] = Environment.GetEnvironmentVariable("REDIS_HOST"),
+    ["Redis:Port"] = Environment.GetEnvironmentVariable("REDIS_PORT"),
+    ["ApiSettings:Secret"] = Environment.GetEnvironmentVariable("SECRET_KEY")
+};
+
+builder.Configuration.AddInMemoryCollection(envVars!);
+
+var redisHost = builder.Configuration["Redis:Host"];
+var redisPort = builder.Configuration["Redis:Port"];
+var redisConnectionString = $"{redisHost}:{redisPort}";
+
 // Подключение к redis
-builder.AddRedisClient("redis");
+builder.AddRedisClient(redisConnectionString);
 
 // Прочитать connection string к postgres
-var connectionString = builder.Configuration.GetConnectionString("Postgres");
+var connectionString = $"Host={builder.Configuration["Postgres:Host"]};" +
+                       $"Port={builder.Configuration["Postgres:Port"]};" +
+                       $"Database={builder.Configuration["Postgres:Database"]};" +
+                       $"Username={builder.Configuration["Postgres:Username"]};" +
+                       $"Password={builder.Configuration["Postgres:Password"]}";
+
+// var connectionString = builder.Configuration.GetConnectionString("Postgres");
 
 // Подключиться к БД
 builder.Services.AddDbContext<TemplateDbContext>(options =>
