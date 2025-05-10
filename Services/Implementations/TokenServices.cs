@@ -8,16 +8,31 @@ namespace Services;
 // Класс TokenServices
 public class TokenServices : ITokenServices
 {
-    public string GenereteJWTToken(User user, string secretKey)
+    public Tokens GenerateJWTToken(User user, string secretKey)
     {
-        var claims = new[]
-        {
-            new Claim(JwtRegisteredClaimNames.Sub, user.SecondName + user.FirstName),
-            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new Claim(ClaimTypes.Email, user.Email),
-            // На будущее добавить роли
-            // new Claim(ClaimTypes.Role, user.Role),
-        };
+        Tokens jwtToken = new Tokens();
+        string accessToken = GenerateAccessToken(user, secretKey);
+        string refreshToken = GenerateRefreshToken(user, secretKey);
+        jwtToken.AccessToken = accessToken;
+        jwtToken.RefreshToken = refreshToken;
+        return jwtToken;
+    }
+
+    private string GenerateAccessToken(User user, string secretKey)
+    {
+        var token = GenerateToken(user, secretKey);
+        return new JwtSecurityTokenHandler().WriteToken(token);
+    }
+
+    private string GenerateRefreshToken(User user, string secretKey)
+    {
+        var token = GenerateToken(user, secretKey + DateTime.Now.ToString());
+        return new JwtSecurityTokenHandler().WriteToken(token);
+    }
+
+    private JwtSecurityToken GenerateToken(User user, string secretKey)
+    {
+        var claims = GenerateClaims(user);
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -26,9 +41,22 @@ public class TokenServices : ITokenServices
                 issuer: "yourdomain.com",
                 audience: "yourdomain.com",
                 claims: claims,
-                expires: DateTime.Now.AddHours(3),
+                expires: DateTime.Now.AddMinutes(5),
                 signingCredentials: creds);
-        return new JwtSecurityTokenHandler().WriteToken(token);
+
+        return token;
+    }
+
+    private Claim[] GenerateClaims(User user)
+    {
+        var claims = new[]
+        {
+            new Claim(JwtRegisteredClaimNames.Name, user.FirstName + " " + user.SecondName),
+            new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+            new Claim(JwtRegisteredClaimNames.Email,  user.Email),
+            // new Claim(ClaimTypes.Role, user.Role),
+        };
+        return claims;
     }
 
 }
