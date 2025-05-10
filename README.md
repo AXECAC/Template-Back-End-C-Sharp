@@ -69,6 +69,12 @@ sudo docker stop pgadmin4Template postgresTemplate docker-redis-1
 sudo docker-compose up --build
 ```
 
+### Stop all containers
+
+```sh
+sudo docker-compose down
+```
+
 ---
 
 
