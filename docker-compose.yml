@@ -17,9 +17,9 @@ services:
     image: postgres
     restart: always
     environment:
-      POSTGRES_USER: aragami
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: templatedb
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
       - "5431:5432"
     volumes:
