@@ -4,5 +4,7 @@ namespace Services;
 // Интерфейс ITokenServices
 public interface ITokenServices
 {
-    public string GenereteJWTToken(User user, string secretKey);
+    public Task<Tokens> GenerateJWTToken(User user, string secretKey);
+
+    public Task<BaseResponse<Tokens>> RefreshToken(string oldRefreshToken, string secretKey);
 }
