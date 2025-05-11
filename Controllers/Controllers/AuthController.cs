@@ -12,11 +12,14 @@ namespace Controllers.AuthController
     public class AuthController : Controller
     {
         private readonly IAuthServices _AuthServices;
+        private readonly ITokenServices _TokenServices;
         private readonly string? _secretKey;
 
-        public AuthController(IAuthServices authServices, IConfiguration configuration)
+        public AuthController(IAuthServices authServices, ITokenServices tokenServices,
+                IConfiguration configuration)
         {
             _AuthServices = authServices;
+            _TokenServices = tokenServices;
             _secretKey = configuration.GetValue<string>("ApiSettings:Secret");
         }
 
@@ -47,7 +50,7 @@ namespace Controllers.AuthController
             if (response.StatusCode == DataBase.StatusCodes.Created)
             {
                 // Вернуть токен (201)
-                return CreatedAtAction(nameof(user), new { response.Data });
+                return CreatedAtAction(nameof(user), response.Data);
             }
             // Такой email уже существует
             else
@@ -83,7 +86,7 @@ namespace Controllers.AuthController
             if (response.StatusCode == DataBase.StatusCodes.Ok)
             {
                 // Вернуть токен (200)
-                return Ok(new { response.Data });
+                return Ok(response.Data);
             }
             // неправильные Email или Password 
             else
@@ -91,7 +94,18 @@ namespace Controllers.AuthController
                 // Вернуть Conflict (401)
                 return Unauthorized();
             }
+        }
 
+
+        [HttpGet]
+        [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status200OK)]
+        [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> RefreshTokens(string oldRefreshToken)
+        {
+            var response = await _TokenServices.RefreshToken(oldRefreshToken, _secretKey);
+
+            // Вернуть токен (200)
+            return Ok(response.Data);
         }
 
         [HttpGet]
