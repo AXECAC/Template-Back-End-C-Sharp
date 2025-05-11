@@ -95,6 +95,7 @@ builder.Logging.AddConsole();
 // Добавить наши Services
 builder.Services.AddSingleton<IUserRepository, UserRepository>();
 builder.Services.AddSingleton<IUserServices, UserServices>();
+builder.Services.AddSingleton<IRefreshTokenRepository, RefreshTokenRepository>();
 builder.Services.AddSingleton<ITokenServices, TokenServices>();
 builder.Services.AddSingleton<IHashingServices, HashingServices>();
 builder.Services.AddSingleton<ICachingServices<User>, CachingServices<User>>();
