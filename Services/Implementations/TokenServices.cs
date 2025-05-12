@@ -45,7 +45,7 @@ public class TokenServices : ITokenServices
         return jwtToken;
     }
 
-    public async Task<BaseResponse<Tokens>> RefreshToken(string oldRefreshToken, string secretKey)
+    public async Task<IBaseResponse<Tokens>> RefreshToken(string oldRefreshToken, string secretKey)
     {
         BaseResponse<Tokens> response;
 
