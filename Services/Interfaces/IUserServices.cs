@@ -14,5 +14,7 @@ public interface IUserServices
 
     Task<IBaseResponse<User>> GetUserByEmail(string email);
 
+    int GetUserId();
+
     Task<IBaseResponse> Edit(string oldEmail, User userEntity);
 }

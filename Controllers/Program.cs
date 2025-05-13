@@ -119,6 +119,8 @@ builder.Services.AddSingleton<ExceptionHandlerMiddleware>();
 builder.Services.AddLogging(builder => builder.AddConsole());
 builder.Logging.AddConsole();
 
+builder.Services.AddHttpContextAccessor();
+
 // Добавить наши Services
 builder.Services.AddSingleton<IUserRepository, UserRepository>();
 builder.Services.AddSingleton<IUserServices, UserServices>();

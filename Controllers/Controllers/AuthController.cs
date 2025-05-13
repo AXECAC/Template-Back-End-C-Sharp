@@ -12,6 +12,7 @@ namespace Controllers.AuthController
     public class AuthController : Controller
     {
         private readonly IAuthServices _AuthServices;
+        private readonly IUserServices _UserServices;
         private readonly ITokenServices _TokenServices;
         private readonly string? _secretKey;
 
@@ -116,6 +117,19 @@ namespace Controllers.AuthController
         public IActionResult Check()
         {
             // Токен валидный, а иначе вернуть Unauthorized
+            return Ok();
+        }
+
+        [HttpDelete]
+        [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status200OK)]
+        [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound)]
+        // Удалить RefreshToken
+        public async Task<IActionResult> Revoke()
+        {
+            int userId = _UserServices.GetUserId();
+            var response = await _TokenServices.DeleteRefreshToken(userId);
+
+            // Вернуть токен (200)
             return Ok();
         }
     }

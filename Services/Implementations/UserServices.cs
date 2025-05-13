@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Http;
 using Context;
 using DataBase;
 using Services.Caching;
+using System.Security.Claims;
 namespace Services;
 
 // Класс UserServices
@@ -9,13 +11,15 @@ public class UserServices : IUserServices
     private readonly IUserRepository _UserRepository;
     private readonly IHashingServices _HashingServices;
     private readonly ICachingServices<User> _CachingServices;
+    private readonly IHttpContextAccessor _HttpContextAccessor;
 
-
-    public UserServices(IUserRepository userRepository, IHashingServices hashingServices, ICachingServices<User> cachingServices)
+    public UserServices(IUserRepository userRepository, IHashingServices hashingServices, 
+            ICachingServices<User> cachingServices, IHttpContextAccessor httpContextAccessor)
     {
         _UserRepository = userRepository;
         _HashingServices = hashingServices;
         _CachingServices = cachingServices;
+        _HttpContextAccessor = httpContextAccessor;
     }
 
     public async Task<IBaseResponse<IEnumerable<User>>> GetUsers()
@@ -137,6 +141,12 @@ public class UserServices : IUserServices
         _CachingServices.SetAsync(user, user.Email);
         baseResponse = BaseResponse<User>.Ok(user);
         return baseResponse;
+    }
+
+    public int GetUserId()
+    {
+        return Convert.ToInt32(_HttpContextAccessor.HttpContext.User.Claims.First(i => 
+                    i.Type == ClaimTypes.NameIdentifier).Value);
     }
 
     public async Task<IBaseResponse> Edit(string oldEmail, User userEntity)
