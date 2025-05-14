@@ -121,6 +121,7 @@ namespace Controllers.AuthController
         }
 
         [HttpDelete]
+        [Authorize]
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status200OK)]
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound)]
         // Удалить RefreshToken
