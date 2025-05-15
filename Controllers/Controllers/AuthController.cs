@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Services;
 using DataBase;
 using Extentions;
+using System.Threading.Tasks;
 
 namespace Controllers.AuthController
 {
@@ -12,13 +13,15 @@ namespace Controllers.AuthController
     public class AuthController : Controller
     {
         private readonly IAuthServices _AuthServices;
+        private readonly IUserServices _UserServices;
         private readonly ITokenServices _TokenServices;
         private readonly string? _secretKey;
 
         public AuthController(IAuthServices authServices, ITokenServices tokenServices,
-                IConfiguration configuration)
+                IUserServices userServices, IConfiguration configuration)
         {
             _AuthServices = authServices;
+            _UserServices = userServices;
             _TokenServices = tokenServices;
             _secretKey = configuration.GetValue<string>("ApiSettings:Secret");
         }
@@ -116,6 +119,23 @@ namespace Controllers.AuthController
         public IActionResult Check()
         {
             // Токен валидный, а иначе вернуть Unauthorized
+            return Ok();
+        }
+
+        [HttpDelete]
+        [Authorize]
+        [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status200OK)]
+        [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> Rewoke()
+        {
+            int userId = _UserServices.GetMyId();
+
+            var response = await _TokenServices.DeleteRefreshToken(userId);
+
+            if (response.StatusCode == DataBase.StatusCodes.NoContent)
+            {
+                return NoContent();
+            }
             return Ok();
         }
     }
