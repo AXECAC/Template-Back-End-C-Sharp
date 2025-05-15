@@ -92,6 +92,8 @@ var connectionString = $"Host={builder.Configuration["Postgres:Host"]};" +
 builder.Services.AddDbContext<TemplateDbContext>(options =>
         options.UseNpgsql(connectionString), ServiceLifetime.Singleton);
 
+builder.Services.AddHttpContextAccessor();
+
 // Добавить Аутентификацию
 builder.Services.AddAuthentication(options =>
         {
