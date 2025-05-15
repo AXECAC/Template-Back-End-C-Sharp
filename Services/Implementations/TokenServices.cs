@@ -115,6 +115,22 @@ public class TokenServices : ITokenServices
         return response;
     }
 
+    public async Task<IBaseResponse> DeleteRefreshToken(int userId)
+    {
+        BaseResponse response;
+
+        var refreshToken = await _RefreshTokenRepository.FirstOrDefaultAsync(token => token.Id == userId);
+
+        if (refreshToken == null)
+        {
+            response = BaseResponse.NoContent();
+            return response;
+        }
+        await _RefreshTokenRepository.Delete(refreshToken);
+
+        response = BaseResponse.Ok();
+        return response;
+    }
 
     private string GenerateAccessToken(User user, string secretKey)
     {

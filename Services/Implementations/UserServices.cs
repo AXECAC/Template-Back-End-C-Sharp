@@ -1,21 +1,30 @@
+using Microsoft.AspNetCore.Http;
 using Context;
 using DataBase;
+using System.Security.Claims;
 using Services.Caching;
 namespace Services;
 
 // Класс UserServices
 public class UserServices : IUserServices
 {
+    private readonly IHttpContextAccessor _HttpContextAccessor;
     private readonly IUserRepository _UserRepository;
     private readonly IHashingServices _HashingServices;
     private readonly ICachingServices<User> _CachingServices;
 
 
-    public UserServices(IUserRepository userRepository, IHashingServices hashingServices, ICachingServices<User> cachingServices)
+    public UserServices(IHttpContextAccessor httpContextAccessor, IUserRepository userRepository,
+            IHashingServices hashingServices, ICachingServices<User> cachingServices)
     {
+        _HttpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
         _UserRepository = userRepository;
         _HashingServices = hashingServices;
         _CachingServices = cachingServices;
+    }
+    public int GetMyId()
+    {
+        return Convert.ToInt32(_HttpContextAccessor.HttpContext.User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value);
     }
 
     public async Task<IBaseResponse<IEnumerable<User>>> GetUsers()
