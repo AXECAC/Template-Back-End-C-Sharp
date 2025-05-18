@@ -126,7 +126,7 @@ namespace Controllers.AuthController
         [Authorize]
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status200OK)]
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> Rewoke()
+        public async Task<IActionResult> Revoke()
         {
             int userId = _UserServices.GetMyId();
 
