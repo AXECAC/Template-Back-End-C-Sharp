@@ -24,6 +24,7 @@ services:
       - "5431:5432"
     volumes:
       - postgres_data:/data/postgres
+      - ./DataBase/Docker/init.sql:/docker-entrypoint-initdb.d/init.sql
 
   pgadmin:
     container_name: pgadmin4Template
